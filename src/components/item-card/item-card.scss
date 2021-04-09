@@ -1,0 +1,60 @@
+.item-card{
+  .nav{
+    height: 70px;
+
+    a {
+      margin-top: 20px;
+      text-decoration: underline;
+    }
+  }
+
+  button{
+    width: 100px;
+    color: white;
+  }
+
+  .flex{
+    display: flex;
+    flex-direction: column;
+
+    &__fill-all{
+      flex: 1 1 auto;
+    }
+  }
+
+  .props{
+    //border: 1px solid red;
+    border-top: 2px solid grey;
+    display: flex;
+    margin: 0px -10px;
+    padding-top: 10px;
+
+    .props-row{
+      //border: 1px solid green;
+      padding: 0px 10px;
+
+      .prop {
+        //border: 1px solid red;
+        margin-top: 30px;
+
+        .prop-title{
+          font-weight: bold;
+        }
+      }
+
+      .prop-value{
+        color: gray;
+      }
+
+      .prop:first-child{
+        margin-top: 0px;
+      }
+
+      .prop-item-name{
+        font-size: larger;
+        font-weight: bold;
+      }
+
+    }
+  }
+}

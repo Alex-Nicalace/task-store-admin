@@ -1,0 +1,28 @@
+.prop-add{
+  .buttons{
+    //border: 1px solid red;
+    text-align: right;
+    margin: 50px 0px;
+
+    button {
+      width: 150px;
+
+    }
+
+    &_save {
+      margin-left: 30px;
+    }
+  }
+
+  .property{
+    &__caption{
+      border: 1px solid red;
+      font-weight: bold;
+    }
+
+    &__item{
+      border: 1px solid red;
+      margin: 10px 0px;
+    }
+  }
+}

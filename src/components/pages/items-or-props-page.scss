@@ -1,0 +1,31 @@
+.items-or-props-page {
+
+  //.active{
+  //  color: red;
+  //}
+  .choice-items-or-props{
+    ul{
+
+      li{
+        list-style: none;
+        margin: 0;
+        padding: .5rem 1rem;
+      }
+
+      .active-li{
+        border-top: 2px solid blue;
+        background: linear-gradient(to bottom, #daebf7, #f0f6fa)
+      }
+    }
+  }
+
+
+  .add-item {
+    text-align: right;
+    margin: 30px 0px;
+    &__btn {
+      color: white;
+    }
+  }
+
+}
