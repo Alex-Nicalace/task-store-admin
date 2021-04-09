@@ -19,12 +19,22 @@ const PropAdd = () => {
 
                 <div className="main-property__item">
                     <div>Укажите тип свойства</div>
+                    <div>
+                        <label>
+                            <input type="radio" name="typeProp"/> Dropdown
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="typeProp"/> Number
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="typeProp"/> String
 
-
-                    <input name="type-prop" type="radio" value="Dropdown" />Dropdown
-                    <input name="prop-prop" type="radio" value="Number" />Number
-                    <input name="prop-prop" type="radio" value="String" />String
-
+                        </label>
+                    </div>
                 </div>
 
             </div>

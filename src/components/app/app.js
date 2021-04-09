@@ -10,7 +10,7 @@ import PropAdd from "../prop-add";
 const App = () => {
     return (
         <main className='container'>
-            <ItemAdd />
+            <PropAdd />
             {/*<Switch>*/}
             {/*    <Route*/}
             {/*        path='/items-or-props/'*/}
