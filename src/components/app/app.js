@@ -6,11 +6,13 @@ import PropsList from "../props-list";
 import {Route, Switch} from "react-router-dom";
 import ItemCard from "../item-card";
 import PropAdd from "../prop-add";
+import Registration from "../registration";
+import Login from "../login";
 
 const App = () => {
     return (
         <main className='container'>
-            <PropAdd />
+            <Login />
             {/*<Switch>*/}
             {/*    <Route*/}
             {/*        path='/items-or-props/'*/}
