@@ -1,3 +1,4 @@
 import PropsList from "./props-list";
+import PropsListContainer from './props-list-container';
 
-export default PropsList;
+export {PropsList, PropsListContainer};

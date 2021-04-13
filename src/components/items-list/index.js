@@ -1,3 +1,4 @@
 import ItemsList from "./items-list";
+import ItemListContainer from "./item-list-container";
 
-export default ItemsList;
+export {ItemsList, ItemListContainer};

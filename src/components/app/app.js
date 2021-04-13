@@ -1,32 +1,46 @@
 import React from "react";
-import ItemsList from "../items-list";
-import ItemsOrPropsPage from "../pages/items-or-props-page";
-import ItemAdd from "../item-add";
-import PropsList from "../props-list";
-import {Route, Switch} from "react-router-dom";
-import ItemCard from "../item-card";
-import PropAdd from "../prop-add";
-import Registration from "../registration";
+import {Redirect, Route, Switch} from 'react-router-dom';
+
 import Login from "../login";
+import ItemsOrPropsPage from "../pages/items-or-props-page";
+import Registration from "../registration";
+import ItemAdd from "../item-add";
+import PropAdd from "../prop-add";
+import ItemCardContainer from "../item-card/item-card-container";
 
 const App = () => {
     return (
         <main className='container'>
-            <Login />
-            {/*<Switch>*/}
-            {/*    <Route*/}
-            {/*        path='/items-or-props/'*/}
-            {/*        render={() => <ItemsOrPropsPage currentTab='товар'/>}*/}
-            {/*        exact/>*/}
-            {/*    <Route*/}
-            {/*        path='/items-or-props/items/'*/}
-            {/*        render={() => <ItemsOrPropsPage currentTab='товар'/>}*/}
-            {/*        exact/>*/}
-            {/*    <Route*/}
-            {/*        path='/items-or-props/props/'*/}
-            {/*        render={() => <ItemsOrPropsPage currentTab='свойство'/>}*/}
-            {/*        exact/>*/}
-            {/*</Switch>*/}
+            <Switch>
+                <Route
+                    path='/'
+                    render={() => <Redirect to='/login'/>}
+                    exact/>
+                <Route
+                    path='/login'
+                    component={Login} exact/>
+                <Route
+                    path='/registration'
+                    component={Registration}/>
+                <Route
+                    path='/item-card/:id'
+                    render={({match}) => {
+                        const {id} = match.params;
+                        return <ItemCardContainer id={id}/>
+                    }} />
+                <Route
+                    path='/items-or-props/items'
+                    render={() => <ItemsOrPropsPage currentTab='товар'/>}/>
+                <Route
+                    path='/items-or-props/props'
+                    render={() => <ItemsOrPropsPage currentTab='свойство'/>}/>
+                <Route
+                    path='/item-add'
+                    component={ItemAdd}/>
+                <Route
+                    path='/props-add'
+                    component={PropAdd}/>
+            </Switch>
         </main>
     )
 }

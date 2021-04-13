@@ -2,37 +2,32 @@ import React from 'react';
 import './item-list.scss';
 import {NavLink} from "react-router-dom";
 
-const ItemsList = () => {
-    const items = [
-        {
-            name: 'CASHES VALLEY LANE',
-            cost: 500000,
-            dateModify: '01.11.2018',
-        },
-        {
-            name: 'DURUN DURUN HOUSE',
-            cost: 1216000,
-            dateModify: '01.11.2018',
-        },
-        {
-            name: 'Mercedes S550 4matic',
-            cost: 118000,
-            dateModify: '31.10.2018',
-        },
-    ]
+const ItemsList = (props) => {
+    // const items = [
+    //     {
+    //         name: 'CASHES VALLEY LANE',
+    //         cost: 500000,
+    //         dateModify: '01.11.2018',
+    //     },
+    //     {
+    //         name: 'DURUN DURUN HOUSE',
+    //         cost: 1216000,
+    //         dateModify: '01.11.2018',
+    //     },
+    //     {
+    //         name: 'Mercedes S550 4matic',
+    //         cost: 118000,
+    //         dateModify: '31.10.2018',
+    //     },
+    // ]
 
-    const cols = [
-        'Перечень товаров',
-        'Стоимость',
-        'Дата изменения',
-        'Управление'
-    ]
+    const { items } = props;
 
     const renderRows = items.map(item => {
         return (
-            <tr >
+            <tr key={item.id}>
                 <td>
-                    <NavLink to='#'> {item.name} </NavLink>
+                    <NavLink to={`/item-card/${item.id}`}> {item.name} </NavLink>
                 </td>
                 <td>{item.cost}$</td>
                 <td>{item.dateModify}</td>

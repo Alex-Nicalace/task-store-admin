@@ -1,7 +1,10 @@
 import React from "react";
-import {NavLink} from "react-router-dom";
+import {NavLink, useHistory } from "react-router-dom";
+import './login.scss'
 
 const Login = () => {
+    const history = useHistory(); // можно с помощью HOC как registration.js
+    const enter = () => history.push('/items-or-props/items');
     return(
         <form className="registration">
             <div className="registration__caption">Вход</div>
@@ -17,10 +20,10 @@ const Login = () => {
                 </label>
             </div>
             <div className="registration__item registration__item_center">
-                <button className="btn btn-warning btn-sm">Войти</button>
+                <button onClick={enter} className="btn btn-warning btn-sm">Войти</button>
             </div>
             <div className="registration__item registration__item_center">
-                <NavLink to="#">Зарегистрироваться</NavLink>
+                <NavLink to="/registration">Зарегистрироваться</NavLink>
             </div>
 
 

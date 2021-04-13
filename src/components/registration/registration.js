@@ -1,8 +1,10 @@
 import React from "react";
-import {NavLink} from "react-router-dom";
+import {NavLink, withRouter} from "react-router-dom";
 import './registration.scss';
 
-const Registration = () => {
+const Registration = (props) => {
+    const { goBack } = props.history;
+
     return (
         <form className="registration">
             <div className="registration__caption">Регистрация</div>
@@ -36,7 +38,11 @@ const Registration = () => {
                 <button className="btn btn-warning btn-sm">Зарегистрироваться</button>
             </div>
             <div className="registration__item registration__item_center">
-                <NavLink to="#">Вернуться</NavLink>
+                <NavLink
+                    to="#"
+                    onClick={goBack}>
+                    Вернуться
+                </NavLink>
             </div>
 
 
@@ -44,4 +50,4 @@ const Registration = () => {
     )
 };
 
-export default Registration;
+export default withRouter(Registration); // можно с помощью хука как в login.js

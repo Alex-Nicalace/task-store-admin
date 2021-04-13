@@ -1,21 +1,34 @@
 import React from "react";
-import ItemsList from "../items-list";
+import {NavLink, withRouter} from "react-router-dom";
+
 import './items-or-props-page.scss'
-import PropsList from "../props-list";
-import {NavLink} from "react-router-dom";
+import {PropsListContainer} from "../props-list";
+import { ItemListContainer } from "../items-list";
 
 class ItemsOrPropsPage extends React.Component {
     render() {
-        const {currentTab} = this.props;
+        const { currentTab, history } = this.props;
 
         const content = (currentTab) => {
             switch (currentTab) {
                 case 'товар' :
-                    return <ItemsList/>
+                    return <ItemListContainer />
                 case 'свойство':
-                    return <PropsList/>
+                    return <PropsListContainer />
             }
         }
+
+        const addItem = (currentTab) => {
+            switch (currentTab) {
+                case 'товар':
+                    history.push('/item-add');
+                    break;
+                case 'свойство':
+                    history.push('/props-add');
+                    break;
+            }
+        }
+
         return (
             <div className="items-or-props-page">
                 <div className="choice-items-or-props">
@@ -33,7 +46,8 @@ class ItemsOrPropsPage extends React.Component {
                     </ul>
                 </div>
                 <div className="add-item">
-                    <button className="add-item__btn btn btn-warning">
+                    <button className="add-item__btn btn btn-warning"
+                    onClick={() => addItem(currentTab)}>
                         Добавить {currentTab}
                     </button>
                 </div>
@@ -45,4 +59,4 @@ class ItemsOrPropsPage extends React.Component {
     }
 };
 
-export default ItemsOrPropsPage;
+export default withRouter(ItemsOrPropsPage);
