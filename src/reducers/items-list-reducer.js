@@ -27,6 +27,11 @@ const itemsReducer = (state, action) => {
                 isLoading: false,
                 error: action.payload,
             };
+        case 'ADD_ITEMS':
+            return {
+                ...state.itemsList,
+                items:[...state.itemsList.items, action.payload]
+            }
         default:
             return state.itemsList
     }

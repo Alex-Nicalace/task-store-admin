@@ -1,5 +1,5 @@
 import React from 'react';
-import './item-list.scss';
+import './items-list.scss';
 import {NavLink} from "react-router-dom";
 
 const ItemsList = (props) => {

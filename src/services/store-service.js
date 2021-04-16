@@ -92,6 +92,16 @@ export default class StoreService {
         })
     }
 
+    postItem = (item) => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                //reject (new Error('Some'))
+
+                resolve({data:{resultCode:0}})
+            }, 700)
+        })
+    }
+
     getProps = () => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {

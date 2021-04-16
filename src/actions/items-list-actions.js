@@ -1,5 +1,5 @@
 export const itemsLoaded = (newItems) => {
-    return{
+    return {
         type: 'FETCH_ITEMS_SUCCESS',
         payload: newItems,
     }
@@ -18,9 +18,37 @@ export const itemsError = (error) => {
     }
 }
 
+export const addItem = (newItem) => {
+    return {
+        type: 'ADD_ITEMS',
+        payload: newItem,
+    }
+}
+
+// export const fetchItems = (storeService, dispatch) => () => {
+//     dispatch(itemsRequested());
+//     storeService.getItems()
+//         .then((response) => dispatch(itemsLoaded(response)))
+//         .catch((error) => dispatch(itemsError(error)) )
+// }
+
 export const fetchItems = (storeService, dispatch) => () => {
     dispatch(itemsRequested());
-    storeService.getItems()
-        .then((response) => dispatch(itemsLoaded(response)))
-        .catch((error) => dispatch(itemsError(error)) )
+    storeService.getItems((element) => {
+        const itemsObj = element.val();
+        const itemsArr = Object.keys(itemsObj).map(key => ({...itemsObj[key], id: key}))
+        dispatch(itemsLoaded(itemsArr))
+    });
+    // .then((response) => dispatch(itemsLoaded(response)))
+    // .catch((error) => dispatch(itemsError(error)) )
 }
+
+export const postItem = (item) => (storeService, dispatch) => {
+    storeService.postItem(item)
+        .then((response) => {
+            if (response.data.resultCode === 0) {
+                dispatch(addItem(item))
+            }
+        })
+}
+

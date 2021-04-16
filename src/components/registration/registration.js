@@ -50,4 +50,4 @@ const Registration = (props) => {
     )
 };
 
-export default withRouter(Registration); // можно с помощью хука как в login.js
+export default withRouter(Registration); // можно с помощью хука как в login-container.js

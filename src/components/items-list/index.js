@@ -1,4 +1,4 @@
 import ItemsList from "./items-list";
-import ItemListContainer from "./item-list-container";
+import ItemListContainer from "./items-list-container";
 
 export {ItemsList, ItemListContainer};

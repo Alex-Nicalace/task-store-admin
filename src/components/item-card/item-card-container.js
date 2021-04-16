@@ -13,8 +13,8 @@ import {withRouter} from "react-router-dom";
 class ItemCardContainer extends React.Component {
 
     componentDidMount() {
-        const { fetchItem } = this.props;
-        fetchItem(1);
+        const { fetchItem, id } = this.props;
+        fetchItem(+id);
     }
 
     render(){
@@ -36,9 +36,9 @@ const mapStateToProps = ( { itemData } ) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-    const {storeService, id} = ownProps;
+    const {storeService} = ownProps;
     return {
-        fetchItem: fetchItem(+id)(storeService, dispatch),
+        fetchItem: (id) => fetchItem(id)(storeService, dispatch),
     }
 }
 

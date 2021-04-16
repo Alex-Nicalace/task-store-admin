@@ -8,11 +8,27 @@ import {fetchItems} from '../../actions'
 import ErrorIndicator from "../spinner/error-indicator";
 import Spinner from "../spinner";
 
-class ItemListContainer extends React.Component {
+class ItemsListContainer extends React.Component {
+    state = {
+        items: []
+    }
 
     componentDidMount() {
+        //const {storeService} = this.props;
+        // this.ref = storeService.base.syncState('/',
+        //     {
+        //         context: this,
+        //         state: 'items',
+        //     })
+
         const {fetchItems} = this.props;
-        fetchItems();
+        //const {items} = this.props;
+
+        //для отладки если в стейте есть данные то не перезатирать эти данные
+        //if (items.length === 0)
+            fetchItems();
+
+        //fetchItems();
     }
 
     render() {
@@ -44,4 +60,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default compose(
     withStoreService(),
     connect(mapStateToProps, mapDispatchToProps)
-)(ItemListContainer);
+)(ItemsListContainer);

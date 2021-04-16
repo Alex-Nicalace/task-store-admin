@@ -1,26 +1,37 @@
+import {NavLink} from "react-router-dom";
 import React from "react";
-import {NavLink, useHistory } from "react-router-dom";
 import './login.scss'
 
-const Login = () => {
-    const history = useHistory(); // можно с помощью HOC как registration.js
-    const enter = () => history.push('/items-or-props/items');
-    return(
-        <form className="registration">
+const Login = (props) => {
+    const {email, password, error, handleChange, onEnterApp} = props;
+    return (
+        <form className="registration" onSubmit={onEnterApp}>
             <div className="registration__caption">Вход</div>
 
             <div className="registration__item">
                 <label className="registration__label">E-mail
-                    <input className="form-control" type="text" placeholder="Введите свой E-mail"/>
+                    <input
+                        className="form-control"
+                        placeholder="Введите свой E-mail"
+                        name="email"
+                        value={email}
+                        onChange={handleChange}/>
                 </label>
             </div>
             <div className="registration__item">
                 <label className="registration__label">Пароль
-                    <input className="form-control" type="password" placeholder="Введите пароль"/>
+                    <input
+                        className="form-control"
+                        type="password"
+                        placeholder="Введите пароль"
+                        name="password"
+                        value={password}
+                        onChange={handleChange}/>
                 </label>
             </div>
+            <div className="registration__error">{error}</div>
             <div className="registration__item registration__item_center">
-                <button onClick={enter} className="btn btn-warning btn-sm">Войти</button>
+                <button onClick={onEnterApp} className="btn btn-warning btn-sm">Войти</button>
             </div>
             <div className="registration__item registration__item_center">
                 <NavLink to="/registration">Зарегистрироваться</NavLink>

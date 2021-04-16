@@ -1,3 +1,4 @@
 import StoreService from './store-service';
+import StoreServiceFirebase from "./store-service-firebase";
 
-export {StoreService};
+export {StoreService, StoreServiceFirebase};
