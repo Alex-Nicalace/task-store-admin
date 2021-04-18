@@ -5,7 +5,6 @@ import {connect} from "react-redux";
 import {withStoreService} from "../hoc";
 import {postItem} from "../../actions";
 import ItemAdd from "./item-add";
-import {withRouter} from "react-router-dom";
 
 class ItemAddContainer extends React.Component {
     state = {
@@ -69,6 +68,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 export default compose(
     withStoreService(),
-    withRouter,
+    //withRouter,
     connect(mapStateToProps, mapDispatchToProps),
 )(ItemAddContainer);

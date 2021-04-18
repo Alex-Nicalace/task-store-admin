@@ -14,7 +14,7 @@ class ItemCardContainer extends React.Component {
 
     componentDidMount() {
         const { fetchItem, id } = this.props;
-        fetchItem(+id);
+        fetchItem(id);
     }
 
     render(){

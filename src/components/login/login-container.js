@@ -2,7 +2,6 @@ import React from "react";
 import {withStoreService} from "../hoc";
 import {compose} from "redux";
 import Login from './login'
-import {withRouter} from "react-router-dom";
 
 class LoginContainer extends React.Component {
     state = {
@@ -37,6 +36,5 @@ class LoginContainer extends React.Component {
 };
 
 export default compose(
-    withRouter,
     withStoreService(),
 )(LoginContainer);

@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import Rebase from 're-base'; //для связки БД с реактом;
 
 const firebaseConfig = {
     apiKey: "AIzaSyBT83V2O5qgXB4p5RRdO0jS1UlQzo8RWOQ",
@@ -31,19 +30,47 @@ export default class StoreServiceFirebase {
         return await firebase.auth().signInWithEmailAndPassword(email, password) //авторизация
     }
 
-    getItems = async (func) => {
-        this.base.ref('items')
-            .on('value', func)
-            // .on('value', (el) => {
-            //     Object.keys(el).map(key => ( {...el[key], key: key} ))
-            // })
+    // getItems = (func) => {
+    //     this.base.ref('items')
+    //         .on('value', func)
+    // }
+    getItems = () => {
+        return new Promise((resolve, reject) => {
+            this.base.ref('items')
+                .on('value', (element) => {
+                    const itemsObj = element.val();
+                    const itemsArr = Object.keys(itemsObj).map(key => ({...itemsObj[key], id: key}));
+                    //console.log('getItems promise');
+                    resolve(itemsArr);
+                    //dispatch(itemsLoaded(itemsArr)
+                });
+        })
     }
 
-
-
-    // getItems = async() => {
-    //     return this.db.ref('items')
-    //         //.on('value', elem => elem.val())
+    getItem = (id, func) => {
+        this.base.ref(`items/${id}`)
+            .on('value', func)
+    }
+    // getItem = (id) => {
+    //     return new Promise((resolve, reject) => {
+    //         this.base.ref(`items/${id}`)
+    //             .on('value', (element) => {
+    //                 const itemObj = element.val();
+    //                 resolve(itemObj);
+    //                 //dispatch(itemsLoaded(itemsArr)
+    //             });
+    //     })
     // }
+
+    postItem = async (item) => {
+        item.dateModify = this.base.ServerValue.TIMESTAMP;
+        await this.base.ref('items').push(item);
+        return item
+    }
+
+    deleteItem = (id) => {
+        this.base.ref(`items/${id}`).remove()
+    }
+
 
 }

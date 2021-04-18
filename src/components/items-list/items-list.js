@@ -30,7 +30,7 @@ const ItemsList = (props) => {
                     <NavLink to={`/item-card/${item.id}`}> {item.name} </NavLink>
                 </td>
                 <td>{item.cost}$</td>
-                <td>{item.dateModify}</td>
+                <td>{new Date(item.dateModify).toLocaleString()}</td>
                 <td>
                     <NavLink to='#'>Ред.</NavLink>
                 </td>

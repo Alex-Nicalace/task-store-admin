@@ -32,23 +32,34 @@ export const addItem = (newItem) => {
 //         .catch((error) => dispatch(itemsError(error)) )
 // }
 
+// export const fetchItems = (storeService, dispatch) => () => {
+//     dispatch(itemsRequested());
+//     storeService.getItems((element) => {
+//         const itemsObj = element.val();
+//         const itemsArr = Object.keys(itemsObj).map(key => ({...itemsObj[key], id: key}))
+//         dispatch(itemsLoaded(itemsArr))
+//     });
+// }
+
 export const fetchItems = (storeService, dispatch) => () => {
     dispatch(itemsRequested());
-    storeService.getItems((element) => {
-        const itemsObj = element.val();
-        const itemsArr = Object.keys(itemsObj).map(key => ({...itemsObj[key], id: key}))
-        dispatch(itemsLoaded(itemsArr))
-    });
-    // .then((response) => dispatch(itemsLoaded(response)))
-    // .catch((error) => dispatch(itemsError(error)) )
+    storeService.getItems()
+        .then((response) => dispatch(itemsLoaded(response)));
+
+    // storeService.getItems((element) => {
+    //     const itemsObj = element.val();
+    //     const itemsArr = Object.keys(itemsObj).map(key => ({...itemsObj[key], id: key}))
+    //     dispatch(itemsLoaded(itemsArr))
+    // });
+
 }
 
 export const postItem = (item) => (storeService, dispatch) => {
     storeService.postItem(item)
         .then((response) => {
-            if (response.data.resultCode === 0) {
+            //if (response.data.resultCode === 0) {
                 dispatch(addItem(item))
-            }
+            //}
         })
 }
 
