@@ -30,7 +30,19 @@ const itemsReducer = (state, action) => {
         case 'ADD_ITEMS':
             return {
                 ...state.itemsList,
-                items:[...state.itemsList.items, action.payload]
+                items:[...state.itemsList.items, action.payload],
+                isLoading: false,
+            }
+        case 'DEL_ITEMS':
+            return {
+                ...state.itemsList,
+                items: state.itemsList.items.filter(item => item.id !== action.payload),
+                isLoading: false,
+            }
+        case 'TOGGLE_LOADING':
+            return {
+                ...state.itemsList,
+                isLoading: action.payload
             }
         default:
             return state.itemsList

@@ -8,7 +8,8 @@ const ItemAdd = (props) => {
             <div className="buttons">
                 <button
                     className="btn btn-danger btn-sm"
-                    onClick={goBack}>
+                    onClick={goBack}
+                    type={"button"}>
                     Вернуться
                 </button>
                 <button className="buttons_save btn btn-success btn-sm">Сохранить</button>

@@ -21,7 +21,7 @@ const ItemsList = (props) => {
     //     },
     // ]
 
-    const { items } = props;
+    const { items, itemDelete } = props;
 
     const renderRows = items.map(item => {
         return (
@@ -32,10 +32,10 @@ const ItemsList = (props) => {
                 <td>{item.cost}$</td>
                 <td>{new Date(item.dateModify).toLocaleString()}</td>
                 <td>
-                    <NavLink to='#'>Ред.</NavLink>
+                    <NavLink to={`/item-edit/${item.id}`}>Ред.</NavLink>
                 </td>
                 <td>
-                    <NavLink to='#'>Удалить</NavLink>
+                    <NavLink onClick={() => itemDelete(item.id)} to='#'>Удалить</NavLink>
                 </td>
             </tr>
         )

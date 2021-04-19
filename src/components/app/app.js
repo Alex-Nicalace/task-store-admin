@@ -38,6 +38,13 @@ const App = () => {
                     path='/item-add'
                     component={ItemAdd}/>
                 <Route
+                    path='/item-edit/:id'
+                    render={({match}) => {
+                        const {id} = match.params;
+                        return <ItemAdd id={id} />
+                    }}
+                />
+                <Route
                     path='/props-add'
                     component={PropAdd}/>
             </Switch>

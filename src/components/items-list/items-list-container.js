@@ -4,14 +4,11 @@ import {compose} from "redux";
 
 import ItemsList from "./items-list";
 import {withStoreService} from '../hoc'
-import {fetchItems} from '../../actions'
+import {fetchItems, deleteItem} from '../../actions'
 import ErrorIndicator from "../spinner/error-indicator";
 import Spinner from "../spinner";
 
 class ItemsListContainer extends React.Component {
-    state = {
-        items: []
-    }
 
     componentDidMount() {
         //const {storeService} = this.props;
@@ -26,19 +23,25 @@ class ItemsListContainer extends React.Component {
 
         //для отладки если в стейте есть данные то не перезатирать эти данные
         //if (items.length === 0)
-            fetchItems();
+        fetchItems();
 
         //fetchItems();
     }
 
     render() {
-        const {items, isLoading, error} = this.props;
+        const {items, isLoading, error, deleteItem} = this.props;
 
         if (error) return <ErrorIndicator/>
 
         if (isLoading) return <Spinner/>
 
-        return <ItemsList items={items}/>
+        const itemDelete = (id) => {
+            deleteItem(id);
+        }
+
+        return <ItemsList
+            items={items}
+            itemDelete={itemDelete}/>
     }
 }
 
@@ -54,6 +57,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     const {storeService} = ownProps;
     return {
         fetchItems: fetchItems(storeService, dispatch),
+        deleteItem: (id) => deleteItem(id)(storeService, dispatch),
     }
 }
 
@@ -61,3 +65,4 @@ export default compose(
     withStoreService(),
     connect(mapStateToProps, mapDispatchToProps)
 )(ItemsListContainer);
+

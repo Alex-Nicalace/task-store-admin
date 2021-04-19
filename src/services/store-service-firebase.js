@@ -37,7 +37,7 @@ export default class StoreServiceFirebase {
     getItems = () => {
         return new Promise((resolve, reject) => {
             this.base.ref('items')
-                .on('value', (element) => {
+                .once('value', (element) => {
                     const itemsObj = element.val();
                     const itemsArr = Object.keys(itemsObj).map(key => ({...itemsObj[key], id: key}));
                     //console.log('getItems promise');
@@ -47,30 +47,87 @@ export default class StoreServiceFirebase {
         })
     }
 
-    getItem = (id, func) => {
-        this.base.ref(`items/${id}`)
-            .on('value', func)
-    }
-    // getItem = (id) => {
-    //     return new Promise((resolve, reject) => {
-    //         this.base.ref(`items/${id}`)
-    //             .on('value', (element) => {
-    //                 const itemObj = element.val();
-    //                 resolve(itemObj);
-    //                 //dispatch(itemsLoaded(itemsArr)
-    //             });
-    //     })
+    // getItem = (id, func) => {
+    //     this.base.ref(`items/${id}`)
+    //         .on('value', func)
     // }
+    getItem = (id) => {
+        return new Promise((resolve, reject) => {
+            this.base.ref(`items/${id}`)
+                .once('value', (element) => {
+                    const itemObj = element.val();
+                    resolve(itemObj);
+                    //dispatch(itemsLoaded(itemsArr)
+                });
+        })
+    }
 
     postItem = async (item) => {
-        item.dateModify = this.base.ServerValue.TIMESTAMP;
-        await this.base.ref('items').push(item);
-        return item
+        item.dateModify = await firebase.database.ServerValue.TIMESTAMP;
+        const id = await this.base.ref('items').push(item);
+        //const key = id.key;
+        let it = null;
+        await this.base.ref(`items/${id.key}`).once('value', el => {
+            it = el.val()
+        });
+        return it
     }
 
-    deleteItem = (id) => {
-        this.base.ref(`items/${id}`).remove()
+    deleteItem = async (id) => {
+        await this.base.ref(`items/${id}`).remove();
+    }
+
+    putItem = async (item, id) => {
+        item.dateModify = await firebase.database.ServerValue.TIMESTAMP;
+        await this.base.ref(`items/${id}`).update(item);
+        let it = null;
+        await this.base.ref(`items/${id}`).once('value', el => {
+            it = el.val()
+        });
+        return it
     }
 
 
+}
+
+export const itemLoaded = (newItem) => {
+    return {
+        type: 'FETCH_ITEM_SUCCESS',
+        payload: newItem,
+    }
+}
+
+export const itemRequested = () => {
+    return {
+        type: 'FETCH_ITEM_REQUEST',
+    }
+}
+
+export const itemError = (error) => {
+    return {
+        type: 'FETCH_ITEM_FAILURE',
+        payload: error,
+    }
+}
+
+export const fetchItem = (id) => (storeService, dispatch) => {
+    dispatch(itemRequested());
+    storeService.getItem(id)
+        .then((response) => dispatch(itemLoaded(response)))
+        .catch((error) => dispatch(itemError(error)) )
+}
+
+// export const fetchItem = (id) => (storeService, dispatch) => {
+//     dispatch(itemRequested());
+//     storeService.getItem(id, (element) => {
+//         const itemsObj = element.val();
+//         dispatch(itemLoaded(itemsObj))
+//     });
+// }
+
+export const updateItem = (item, id) => (storeService, dispatch) => {
+    storeService.putItem(item, id)
+        .then((response) => {
+            dispatch(itemLoaded(response)
+            )})
 }

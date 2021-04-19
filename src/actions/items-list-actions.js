@@ -25,6 +25,20 @@ export const addItem = (newItem) => {
     }
 }
 
+export const delItem = (id) => {
+    return {
+        type: 'DEL_ITEMS',
+        payload: id,
+    }
+}
+
+export const toggleLoading = (boolean) => {
+    return {
+        type: 'TOGGLE_LOADING',
+        payload: boolean,
+    }
+}
+
 // export const fetchItems = (storeService, dispatch) => () => {
 //     dispatch(itemsRequested());
 //     storeService.getItems()
@@ -55,11 +69,21 @@ export const fetchItems = (storeService, dispatch) => () => {
 }
 
 export const postItem = (item) => (storeService, dispatch) => {
+    dispatch(toggleLoading(true));
     storeService.postItem(item)
         .then((response) => {
             //if (response.data.resultCode === 0) {
-                dispatch(addItem(item))
+            dispatch(addItem(response))
             //}
         })
 }
 
+export const deleteItem = (id) => (storeService, dispatch) => {
+    dispatch(toggleLoading(true));
+    storeService.deleteItem(id)
+        .then(() => {
+            //if (response.data.resultCode === 0) {
+            dispatch(delItem(id))
+            //}
+        })
+}
