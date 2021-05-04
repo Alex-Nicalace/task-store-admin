@@ -25,7 +25,20 @@ const propsReducer = (state, action) => {
                 props: [],
                 isLoading: false,
                 error: action.payload,
-            };
+            }
+        case 'TOGGLE_LOADING_PROPS':
+            return {
+                ...state.propsList,
+                isLoading: action.payload,
+                error: null,
+            }
+        case 'DEL_PROPS':
+            return {
+                ...state.propsList,
+                props: state.propsList.props.filter(prop => prop.id !== action.payload),
+                isLoading: false,
+                error: null,
+            }
         default:
             return state.propsList
     }

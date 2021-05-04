@@ -1,3 +1,4 @@
 import PropAdd from "./prop-add";
+import PropAddContainer from "./prop-add-container";
 
-export default PropAdd;
+export {PropAdd, PropAddContainer};

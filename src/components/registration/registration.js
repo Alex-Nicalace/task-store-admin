@@ -38,11 +38,11 @@ const Registration = (props) => {
                 <button className="btn btn-warning btn-sm">Зарегистрироваться</button>
             </div>
             <div className="registration__item registration__item_center">
-                <NavLink
-                    to="#"
+                <span
+                    className="as-link"
                     onClick={goBack}>
                     Вернуться
-                </NavLink>
+                </span>
             </div>
 
 

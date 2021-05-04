@@ -11,21 +11,8 @@ import Spinner from "../spinner";
 class ItemsListContainer extends React.Component {
 
     componentDidMount() {
-        //const {storeService} = this.props;
-        // this.ref = storeService.base.syncState('/',
-        //     {
-        //         context: this,
-        //         state: 'items',
-        //     })
-
         const {fetchItems} = this.props;
-        //const {items} = this.props;
-
-        //для отладки если в стейте есть данные то не перезатирать эти данные
-        //if (items.length === 0)
         fetchItems();
-
-        //fetchItems();
     }
 
     render() {

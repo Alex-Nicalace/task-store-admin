@@ -19,7 +19,8 @@ const ItemCard = (props) => {
     return (
         <div className="item-card">
             <div className="nav">
-                <NavLink onClick={goBack} to="#">Вернуться</NavLink>
+                <span className="as-link"
+                      onClick={goBack}>Вернуться</span>
             </div>
 
             <div className="props">

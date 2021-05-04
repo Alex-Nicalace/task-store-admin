@@ -35,7 +35,7 @@ const ItemsList = (props) => {
                     <NavLink to={`/item-edit/${item.id}`}>Ред.</NavLink>
                 </td>
                 <td>
-                    <NavLink onClick={() => itemDelete(item.id)} to='#'>Удалить</NavLink>
+                    <span className="as-link" onClick={() => itemDelete(item.id)} >Удалить</span>
                 </td>
             </tr>
         )

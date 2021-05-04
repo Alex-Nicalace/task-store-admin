@@ -1,31 +1,14 @@
 import React from "react";
 import './props-list.scss';
-import {NavLink} from "react-router-dom";
 
-const PropsList = (props) => {
-    // const propsArr = [
-    //     {
-    //         propName: 'Цвет авто',
-    //         propType: 'Dropdown',
-    //     },
-    //     {
-    //         propName: 'Год выпуска',
-    //         propType: 'Number',
-    //     },
-    //     {
-    //         propName: 'Тип топлива',
-    //         propType: 'String',
-    //     },
-    // ]
-
-    const { propsArr } = props;
+const PropsList = ({ propsArr, delProp }) => {
 
     const renderRows = propsArr.map(item => {
         return (
             <tr key={item.id} >
                 <td>{item.propName}</td>
                 <td>{item.propType}</td>
-                <td><NavLink to='#'>Удалить</NavLink></td>
+                <td><span className="as-link" onClick={() => delProp(item.id)} >Удалить</span></td>
             </tr>
         )
     })

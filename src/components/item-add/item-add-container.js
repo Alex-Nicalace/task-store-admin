@@ -1,11 +1,11 @@
 import React from "react";
 import {compose} from "redux";
-import {connect} from "react-redux";
 
 import {withStoreService} from "../hoc";
-import {fetchItem, postItem, updateItem} from "../../actions";
 import ItemAdd from "./item-add";
 import {withRouter} from "react-router-dom";
+import ErrorIndicator from "../spinner/error-indicator";
+import Spinner from "../spinner";
 
 class ItemAddContainer extends React.Component {
     state = {
@@ -14,39 +14,52 @@ class ItemAddContainer extends React.Component {
             cost: '',
             img: '',
             description: '',
-        }
+        },
+        isLoading: false,
+        error: null,
+        file: null,
+        fileURL: null,
+    }
+
+    setValueForItemInState(item) {
+        this.setState({
+            ...this.state,
+            item: item,
+            isLoading: false,
+            error: null,
+            fileURL: item.img,
+        })
     }
 
     componentDidMount() {
-        const {id, fetchItem} = this.props;
+        const {id, storeService: {getItem}} = this.props;
 
         if (!id) return;
 
-        fetchItem(id);
+        this.setState({isLoading: true});
 
-        const {item} = this.props;
+        //fetchItem(id);
+        getItem(id)
+            .then(resolve => this.setValueForItemInState(resolve)
+            )
+    }
+
+    onFileChange = async (e) => {
+        const {name} = e.target;
+        const file = e.target.files[0];
 
         this.setState({
             ...this.state,
-            item: item
+            item: {
+                ...this.state.item,
+                [name]: file?.name
+            },
+            file: file,
         })
-
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.item !== this.props.item) {
-
-            const {item} = this.props;
-
-            this.setState({
-                ...this.state,
-                item: item
-            })
-        }
-    }
-
-    onChange = (e) => {
-        const {name, value} = e.target;
+    onChange = (event) => {
+        const {name, value} = event.target;
         this.setState({
             ...this.state,
             item: {
@@ -54,24 +67,45 @@ class ItemAddContainer extends React.Component {
                 [name]: value
             }
         })
-        //console.log(this.state);
+    }
+
+    uploadImg = (event) => {
+        //const file = event.target.files[0];
+        const file = 'file';
+        let formData = new FormData();
+        formData.append('image', file);
     }
 
     onSubmit = (e) => {
         e.preventDefault();
-        const {item} = this.state;
+        const {item, file, fileURL} = this.state;
 
-        const {postItem, updateItem, id} = this.props;
+        const {id, storeService: {putItem, postItem}} = this.props;
 
-        if (id) {
-            updateItem(item, id);
-        } else
-            postItem(item);
+        this.setState({isLoading: true});
+
+        id
+            ? putItem(item, id, file, fileURL)
+                .then(resolve => {
+                    this.setValueForItemInState(resolve);
+                    alert('Обновлено')
+                })
+            : postItem(item, file)
+                .then(resolve => {
+                    this.setValueForItemInState(resolve);
+                    alert('Созданно')
+                });
+
     };
 
     render() {
-        const {name, cost, img, description} = this.state.item;
-        const {onChange, onSubmit} = this;
+        const {isLoading, error, item: {name, cost, img, description}} = this.state;
+
+        if (error) return <ErrorIndicator/>
+
+        if (isLoading) return <Spinner/>
+
+        const {onChange, onFileChange, onSubmit, uploadImg} = this;
         const {goBack} = this.props.history;
         return (<ItemAdd
                 name={name}
@@ -79,35 +113,15 @@ class ItemAddContainer extends React.Component {
                 img={img}
                 description={description}
                 onChange={onChange}
+                onFileChange={onFileChange}
                 onSubmit={onSubmit}
-                goBack={goBack}/>
+                goBack={goBack}
+                uploadImg={uploadImg}/>
         )
-    }
-}
-
-const mapStateToProps = ({itemData}) => {
-    return {
-        // items: itemsList.items,
-        // isLoading: itemsList.isLoading,
-        // error: itemsList.error,
-
-        item: itemData.item,
-        isLoading: itemData.isLoading,
-        error: itemData.error,
-    }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-    const {storeService} = ownProps;
-    return {
-        postItem: (item) => postItem(item)(storeService, dispatch),
-        fetchItem: (id) => fetchItem(id)(storeService, dispatch),
-        updateItem: (item, id) => updateItem(item, id)(storeService, dispatch),
     }
 }
 
 export default compose(
     withStoreService(),
     withRouter,
-    connect(mapStateToProps, mapDispatchToProps),
 )(ItemAddContainer);

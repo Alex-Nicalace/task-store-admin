@@ -5,8 +5,10 @@ import Login from "../login";
 import ItemsOrPropsPage from "../pages/items-or-props-page";
 import Registration from "../registration";
 import ItemAdd from "../item-add";
-import PropAdd from "../prop-add";
+import {PropAddContainer} from "../prop-add";
 import ItemCardContainer from "../item-card/item-card-container";
+
+import './app.scss'
 
 const App = () => {
     return (
@@ -46,7 +48,7 @@ const App = () => {
                 />
                 <Route
                     path='/props-add'
-                    component={PropAdd}/>
+                    component={PropAddContainer}/>
             </Switch>
         </main>
     )

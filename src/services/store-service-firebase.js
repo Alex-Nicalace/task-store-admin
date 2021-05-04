@@ -22,6 +22,8 @@ export default class StoreServiceFirebase {
 
     base = this.firebaseApp.database();
 
+    storage = this.firebaseApp.storage();
+
     createAccount = async (email, password) => {
         return await firebase.auth().createUserWithEmailAndPassword(email, password)
     }
@@ -62,7 +64,10 @@ export default class StoreServiceFirebase {
         })
     }
 
-    postItem = async (item) => {
+    postItem = async (item, file) => {
+        if (file) {
+            item.img = await this.uploadFile(file); //загрузить файл и получить ссылку
+        }
         item.dateModify = await firebase.database.ServerValue.TIMESTAMP;
         const id = await this.base.ref('items').push(item);
         //const key = id.key;
@@ -77,7 +82,13 @@ export default class StoreServiceFirebase {
         await this.base.ref(`items/${id}`).remove();
     }
 
-    putItem = async (item, id) => {
+    putItem = async (item, id, file, fileURL) => {
+        if (fileURL !== item.img) {
+            await this.deleteFile(fileURL)
+        }
+        if (file) {
+            item.img = await this.uploadFile(file); //загрузить файл и получить ссылку
+        }
         item.dateModify = await firebase.database.ServerValue.TIMESTAMP;
         await this.base.ref(`items/${id}`).update(item);
         let it = null;
@@ -87,47 +98,72 @@ export default class StoreServiceFirebase {
         return it
     }
 
-
-}
-
-export const itemLoaded = (newItem) => {
-    return {
-        type: 'FETCH_ITEM_SUCCESS',
-        payload: newItem,
+    getProps = () => {
+        const init = {
+            props: {
+                id: null,
+                propName: null,
+                propType: null,
+            }
+        };
+        return new Promise((resolve, reject) => {
+            this.base.ref('props')
+                .once('value', (element) => {
+                    const propsObj = element.val() ?? init;
+                    const propsArr = Object.keys(propsObj).map(key => ({...propsObj[key], id: key}));
+                    //console.log('getItems promise');
+                    resolve(propsArr);
+                    //dispatch(itemsLoaded(itemsArr)
+                });
+        })
     }
-}
 
-export const itemRequested = () => {
-    return {
-        type: 'FETCH_ITEM_REQUEST',
+    postProp = async (prop) => {
+        prop.dateModify = await firebase.database.ServerValue.TIMESTAMP;
+        const id = await this.base.ref('props').push(prop);
+        //const key = id.key;
+        let resolve = null;
+        await this.base.ref(`props/${id.key}`).once('value', el => {
+            resolve = el.val()
+        });
+        return resolve
     }
-}
 
-export const itemError = (error) => {
-    return {
-        type: 'FETCH_ITEM_FAILURE',
-        payload: error,
+    deleteProp = async (id) => {
+        await this.base.ref(`props/${id}`).remove();
     }
-}
 
-export const fetchItem = (id) => (storeService, dispatch) => {
-    dispatch(itemRequested());
-    storeService.getItem(id)
-        .then((response) => dispatch(itemLoaded(response)))
-        .catch((error) => dispatch(itemError(error)) )
-}
+    uploadFile = async (file) => {
+        const storageRef = this.storage.ref();
+        const fileRef = storageRef.child(file.name);
+        await fileRef.put(file);
+        return await fileRef.getDownloadURL();
+    }
 
-// export const fetchItem = (id) => (storeService, dispatch) => {
-//     dispatch(itemRequested());
-//     storeService.getItem(id, (element) => {
-//         const itemsObj = element.val();
-//         dispatch(itemLoaded(itemsObj))
-//     });
-// }
+    deleteFile = async (fileURL) => {
+        // const storageFile = this.storage.Reference.bucket.file(fileURL);
+        // const isExists = await storageFile.exists()
+        //     .then((exists) => {
+        //         if (exists[0]) {
+        //             return true
+        //         }
+        //     })
+        //
+        // if (isExists) {
+        //     const fileRef = await this.storage.refFromURL(fileURL)
+        //     return await fileRef.delete()
+        //         .then(() => true);
+        // }
+        let fileRef = null;
+         try {
+            fileRef = await this.storage.refFromURL(fileURL)
+         }
+         catch (e) {fileRef = null}
+        if (fileRef) {
+            return await fileRef.delete()
+                .then(() => true);
+        }
+    }
 
-export const updateItem = (item, id) => (storeService, dispatch) => {
-    storeService.putItem(item, id)
-        .then((response) => {
-            dispatch(itemLoaded(response)
-            )})
+
 }

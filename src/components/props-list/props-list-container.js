@@ -3,7 +3,7 @@ import {compose} from "redux";
 import {connect} from "react-redux";
 
 import PropsList from "./props-list";
-import {fetchProps} from "../../actions";
+import {deleteProp, fetchProps} from "../../actions";
 import {withStoreService} from "../hoc";
 import ErrorIndicator from "../spinner/error-indicator";
 import Spinner from "../spinner";
@@ -12,22 +12,28 @@ import Spinner from "../spinner";
 class PropsListContainer extends React.Component {
 
     componentDidMount() {
-        const { fetchProps } = this.props
+        const {fetchProps} = this.props
         fetchProps();
     }
 
-    render(){
+    render() {
         const {props: propsArr, isLoading, error} = this.props;
 
         if (error) return <ErrorIndicator/>
 
         if (isLoading) return <Spinner/>
 
-        return <PropsList propsArr={propsArr}/>
+        const delProp = (id) => {
+            const {deleteProp} = this.props;
+            deleteProp(id);
+        }
+
+        return <PropsList propsArr={propsArr}
+                          delProp={delProp}/>
     }
 }
 
-const mapStateToProps = ( {propsList} ) => {
+const mapStateToProps = ({propsList}) => {
     return {
         props: propsList.props,
         isLoading: propsList.isLoading,
@@ -39,6 +45,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     const {storeService} = ownProps;
     return {
         fetchProps: fetchProps(storeService, dispatch),
+        deleteProp: (id) => deleteProp(id)(storeService, dispatch)
     }
 }
 

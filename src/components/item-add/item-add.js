@@ -2,7 +2,7 @@ import React from "react";
 import './item-add.scss';
 
 const ItemAdd = (props) => {
-    const {name, cost, img, description, onChange, onSubmit, goBack} = props;
+    const {name, cost, img, description, onChange, onSubmit, goBack, onFileChange} = props;
     return (
         <form className="item-add" onSubmit={onSubmit}>
             <div className="buttons">
@@ -39,14 +39,31 @@ const ItemAdd = (props) => {
 
                 <div className="main-property__item">
                     <div>Изображение<span>*</span></div>
-                    <input
-                        className="form-control"
-                        name='img'
-                        value={img}
-                        onChange={onChange}/>
-                    <button className="btn btn-outline-success btn-sm"><i className="fa fa-exclamation"></i>
-                    </button>
+                    <div style={{position: "relative"}}>
+                        <label
+                            //onClick={uploadImg}
+                            className="form-control"
+                            htmlFor="inputImg"
+                            style={{textAlign: "right", height:"100%"}}
+                        >
+                            <div style={{display: "flex", justifyContent: "space-between"}}>
+                                <div style={{textAlign: "left"}}>{img}</div>
+                                <div><i className="fa fa-upload" fa-lg style={{color: "blue", fontSize: "24px"}}></i>
+                                </div>
 
+                            </div>
+
+                        </label>
+
+                        <input type="file"
+                               id="inputImg"
+                               name="img"
+                               //value={img}
+                               onChange={onFileChange}
+                               className="form-control"
+                               style={{position: "absolute", top: "0px", opacity: "0"}}
+                        />
+                    </div>
                 </div>
 
                 <div className="main-property__item">

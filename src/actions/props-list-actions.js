@@ -1,3 +1,5 @@
+import {delItem, toggleLoading} from "./items-list-actions";
+
 export const propsLoaded = (newProps) => {
     return{
         type: 'FETCH_PROPS_SUCCESS',
@@ -18,9 +20,33 @@ export const propsError = (error) => {
     }
 }
 
+export const propsToggleLoading = (boolean) => {
+    return {
+        type: 'TOGGLE_LOADING_PROPS',
+        payload: boolean,
+    }
+}
+
+export const delProp = (id) => {
+    return {
+        type: 'DEL_PROPS',
+        payload: id,
+    }
+}
+
 export const fetchProps = (storeService, dispatch) => () => {
     dispatch(propsRequested());
     storeService.getProps()
         .then((response) => dispatch(propsLoaded(response)))
         .catch((error) => dispatch(propsError(error)) )
+}
+
+export const deleteProp = (id) => (storeService, dispatch) => {
+    dispatch(propsToggleLoading(true));
+    storeService.deleteProp(id)
+        .then(() => {
+            //if (response.data.resultCode === 0) {
+            dispatch(delProp(id))
+            //}
+        })
 }
