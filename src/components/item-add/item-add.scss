@@ -44,6 +44,23 @@
 
   }
 
+  .btn-prop{
+    $size: 27px;
+    border-radius: 50%;
+    border:1px solid blue;
+    color:blue;
+    width: $size;
+    height: $size;
+    text-align: center;
+    font-weight: bold;
+    background-color: white;
+    cursor: pointer;
+    line-height: 0px;
+    padding: 0px;
+    margin: 0px;
+    //vertical-align: center;
+  }
+
 
 }
 

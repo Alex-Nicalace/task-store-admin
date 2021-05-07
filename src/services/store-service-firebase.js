@@ -141,27 +141,18 @@ export default class StoreServiceFirebase {
     }
 
     deleteFile = async (fileURL) => {
-        // const storageFile = this.storage.Reference.bucket.file(fileURL);
-        // const isExists = await storageFile.exists()
-        //     .then((exists) => {
-        //         if (exists[0]) {
-        //             return true
-        //         }
-        //     })
-        //
-        // if (isExists) {
-        //     const fileRef = await this.storage.refFromURL(fileURL)
-        //     return await fileRef.delete()
-        //         .then(() => true);
-        // }
-        let fileRef = null;
-         try {
-            fileRef = await this.storage.refFromURL(fileURL)
-         }
-         catch (e) {fileRef = null}
-        if (fileRef) {
-            return await fileRef.delete()
-                .then(() => true);
+        // удалить файл если он существует
+        try {
+            const fileRef = await this.storage.refFromURL(fileURL);
+            const storageRef = this.storage.ref();
+            storageRef.child(fileRef.fullPath).getDownloadURL()
+                .then(async () => {
+                        console.log('delete file');
+                        await fileRef.delete();
+                    }
+                )
+                .catch(() => console.log('file not exists'))
+        } catch (e) {
         }
     }
 
