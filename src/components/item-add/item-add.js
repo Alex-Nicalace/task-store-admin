@@ -27,7 +27,7 @@ const ItemAdd = ({
     }
 
     const propertyListRender = propertiesList.map(item => (
-        <option value={item.propName} key={item.id} disabled={isExistsProperty(item.propName)}>{item.propName}</option>
+        <option value={{valueProperty:item.propName, typeProperty: item.propType}} key={item.id} disabled={isExistsProperty(item.propName)} >{item.propName}</option>
     ))
 
     const propertyRender = Object.keys(properties).map((key, index) => (
@@ -35,21 +35,18 @@ const ItemAdd = ({
             <button
                 type="button"
                 className="btn-prop"
-                onClick={() => onDeleteProperty(key)}
-            >-
+                onClick={() => onDeleteProperty(key)}>-
             </button>
             <label>{`Свойство ${++index}`}
                 <select
                     className="form-control"
                     id={key}
                     name="nameProperty"
-                    value={properties[key]?.nameProperty}
+                    value={{valueProperty:properties[key]?.nameProperty, typeProperty: properties[key]?.typeProperty}}
                     onChange={onChangeProperty}
                     //defaultValue={propertiesListExt[0].propName}
                 >
                     {propertyListRender}
-                    {/*<option value={key}>{key}</option>*/}
-                    {/*<option value="2">2</option>*/}
                 </select>
             </label>
 
@@ -62,6 +59,17 @@ const ItemAdd = ({
                     onChange={onChangeProperty}
                 />
             </label>
+
+            {properties[key]?.typeProperty === 'Dropdown'
+                ? <div>
+                    <button
+                        type="button"
+                        className="btn-prop"
+                    >+
+                    </button>
+                </div>
+                : null
+            }
         </div>
     ))
     return (

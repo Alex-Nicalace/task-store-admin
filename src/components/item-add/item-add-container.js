@@ -20,6 +20,7 @@ class ItemAddContainer extends React.Component {
                 // id:{
                 //     nameProperty:'',
                 //     valueProperty:'',
+                //     typeProperty:''
                 // }
             }
         },
@@ -66,16 +67,19 @@ class ItemAddContainer extends React.Component {
         const {props: propertiesList = []} = this.props;
 
         if (!('properties' in this.state.item)) {
-            return propertiesList[0].propName;
+            // return propertiesList[0].propName;
+            return propertiesList[0];
         }
 
         const existsPropertyArr = Object.keys(this.state.item.properties).map(key => this.state.item.properties[key].nameProperty);
 
         for (let i = 0; i <= propertiesList.length - 1; i++) {
-            const nameProperty = propertiesList[i].propName;
+            //const nameProperty = propertiesList[i].propName;
+            const property = propertiesList[i];
 
-            if (!existsPropertyArr.includes(nameProperty)) {
-                return nameProperty;
+            if (!existsPropertyArr.includes(/*nameProperty*/property.propName)) {
+                //return nameProperty;
+                return property;
             }
 
         }
@@ -90,7 +94,11 @@ class ItemAddContainer extends React.Component {
                 ...this.state.item,
                 properties: {
                     ...this.state.item.properties,
-                    [Date.now()]: {nameProperty: notUsedProperty, valueProperty: ''}
+                    [Date.now()]: {
+                        nameProperty: notUsedProperty.propName,
+                        valueProperty: '',
+                        typeProperty: notUsedProperty.propType
+                    }
                 }
             },
         })
@@ -140,8 +148,36 @@ class ItemAddContainer extends React.Component {
         })
     }
 
+    // onChangeProperty = (e) => {
+    //     const {name, value, id} = e.target;
+    //
+    //     this.setState({
+    //         ...this.state,
+    //         itemDirty: {...this.state.itemDirty},
+    //         item: {
+    //             ...this.state.item,
+    //             properties: {
+    //                 ...this.state.item.properties,
+    //                 [id]: {
+    //                     ...this.state.item.properties[id],
+    //                     [name]: value
+    //                 }
+    //             }
+    //         }
+    //     })
+    //     console.log(this.state)
+    // }
+
     onChangeProperty = (e) => {
         const {name, value, id} = e.target;
+
+        let val;
+        if (typeof value === 'object') {
+            const {valueProperty, typeProperty} = value;
+            val = {[name]: valueProperty, typeProperty: typeProperty}
+        } else {
+            val = {[name]: value}
+        }
 
         this.setState({
             ...this.state,
@@ -151,13 +187,13 @@ class ItemAddContainer extends React.Component {
                 properties: {
                     ...this.state.item.properties,
                     [id]: {
-                        ...this.state.item.properties[id],
-                        [name]: value
+                        ...this.state.item.properties[id], ...val
+                        // [name]: valueProperty,
+                        // typeProperty: typeProperty
                     }
                 }
             }
         })
-        console.log(this.state)
     }
 
     onDeleteProperty = (id) => {
