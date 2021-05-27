@@ -1,39 +1,56 @@
 import React from "react";
 import './prop-add.scss';
+import ButtonsBackAndSave from "../buttons-back-and-save/buttons-back-and-save";
 
-const PropAdd = ({propName, propType, onSubmit, onChange, goBack}) => {
+const PropAdd = ({
+                     propName,
+                     propType,
+                     onSubmit,
+                     onChange,
+                     propertyDirty: {propNameDirty, propTypeDirty},
+                     blurHandler
+                 }) => {
     return (
         <form className="prop-add"
               onSubmit={onSubmit}>
-            <div className="buttons">
-                <button className="btn btn-danger btn-sm"
-                        type="button"
-                        onClick={goBack}>Вернуться
-                </button>
-                <button className="buttons_save btn btn-success btn-sm">Сохранить</button>
-            </div>
+
+            <ButtonsBackAndSave disabledButtonSave={!propName || !propType}/>
+
+            {/*<div className="buttons">*/}
+            {/*    <button className="btn btn-danger btn-sm"*/}
+            {/*            type="button"*/}
+            {/*            onClick={goBack}>Вернуться*/}
+            {/*    </button>*/}
+            {/*    <button className="buttons_save btn btn-success btn-sm"*/}
+            {/*            disabled={!propName || !propType}>Сохранить*/}
+            {/*    </button>*/}
+            {/*</div>*/}
 
             <div className="property">
                 <div className="property__caption">Добавление свойства</div>
 
                 <div className="property__item">
                     <div>Название свойства</div>
+                    {propNameDirty && !propName && <div style={{color: "red"}}>Укажите название свойства</div>}
                     <input
                         className="form-control"
                         placeholder="Цвет авто"
                         name="propName"
                         value={propName}
-                        onChange={onChange}/>
+                        onChange={onChange}
+                        onBlur={blurHandler}/>
                 </div>
 
                 <div className="main-property__item">
                     <div>Укажите тип свойства</div>
+                    {propTypeDirty && !propType && <div style={{color: "red"}}>Укажите тип свойства</div>}
                     <div>
                         <label>
                             <input type="radio"
                                    name="propType" value="Dropdown"
                                    checked={propType === 'Dropdown'}
-                                   onChange={onChange}/> Dropdown
+                                   onChange={onChange}
+                                   onBlur={blurHandler}/> Dropdown
                         </label>
                     </div>
                     <div>
@@ -42,7 +59,8 @@ const PropAdd = ({propName, propType, onSubmit, onChange, goBack}) => {
                                    name="propType"
                                    value="Number"
                                    checked={propType === 'Number'}
-                                   onChange={onChange}/> Number
+                                   onChange={onChange}
+                                   onBlur={blurHandler}/> Number
                         </label>
                     </div>
                     <div>
@@ -51,7 +69,8 @@ const PropAdd = ({propName, propType, onSubmit, onChange, goBack}) => {
                                    name="propType"
                                    value="String"
                                    checked={propType === 'String'}
-                                   onChange={onChange}/> String
+                                   onChange={onChange}
+                                   onBlur={blurHandler}/> String
 
                         </label>
                     </div>

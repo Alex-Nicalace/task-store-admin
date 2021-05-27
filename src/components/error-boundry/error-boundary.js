@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ErrorIndicator from "../spinner/error-indicator";
+import ErrorIndicator from "../error-indicator";
 
 export default class ErrorBoundary extends React.Component {
     state = {

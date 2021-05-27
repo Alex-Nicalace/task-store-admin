@@ -2,6 +2,11 @@
   th {
     color: darkgrey;
     font-weight: normal;
+
+  }
+
+  .th-pointer{
+    cursor: pointer;
   }
 
   .first-column {
@@ -12,5 +17,11 @@
   a{
     text-decoration: underline;
   }
+
+  .search-panel{
+    margin-bottom: 10px;
+  }
+
+
 }
 

@@ -1,4 +1,4 @@
-import {delItem, toggleLoading} from "./items-list-actions";
+import {setDisappearingMessage} from "./messages-actions";
 
 export const propsLoaded = (newProps) => {
     return{
@@ -46,7 +46,12 @@ export const deleteProp = (id) => (storeService, dispatch) => {
     storeService.deleteProp(id)
         .then(() => {
             //if (response.data.resultCode === 0) {
-            dispatch(delProp(id))
+            dispatch(delProp(id));
+            dispatch(setDisappearingMessage('Свойство удалено!', 'warning'));
             //}
+        })
+        .catch(error => {
+            dispatch(propsError(error));
+            dispatch(setDisappearingMessage('Свойство не было удалено!', 'danger'));
         })
 }

@@ -1,3 +1,5 @@
+import {setDisappearingMessage} from "./index";
+
 export const itemsLoaded = (newItems) => {
     return {
         type: 'FETCH_ITEMS_SUCCESS',
@@ -73,7 +75,7 @@ export const postItem = (item) => (storeService, dispatch) => {
     storeService.postItem(item)
         .then((response) => {
             //if (response.data.resultCode === 0) {
-            dispatch(addItem(response))
+            dispatch(addItem(response));
             //}
         })
 }
@@ -83,7 +85,12 @@ export const deleteItem = (id) => (storeService, dispatch) => {
     storeService.deleteItem(id)
         .then(() => {
             //if (response.data.resultCode === 0) {
-            dispatch(delItem(id))
+            dispatch(delItem(id));
+            dispatch(setDisappearingMessage('Товар удален!', 'warning'));
             //}
+        })
+        .catch(error => {
+            dispatch(itemsError(error));
+            dispatch(setDisappearingMessage('Товар не был удален!', 'danger'));
         })
 }

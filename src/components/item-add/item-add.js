@@ -1,12 +1,12 @@
 import React from "react";
 import './item-add.scss';
+import ButtonsBackAndSave from "../buttons-back-and-save/buttons-back-and-save";
 
 const ItemAdd = ({
                      item: {name, cost, img, description, properties = {}},
                      itemDirty: {nameDirty, costDirty, imgDirty},
                      onChange,
                      onSubmit,
-                     goBack,
                      onFileChange,
                      blurHandler,
                      addProperty,
@@ -14,7 +14,9 @@ const ItemAdd = ({
                      propertiesList,
                      onChangeProperty,
                      onDeleteProperty,
-                     notUsedProperty
+                     notUsedProperty,
+                     addPropertyDropdown,
+                     deletePropertyDropdown
                  }) => {
 
     const isExistsProperty = (nameProperty) => {
@@ -27,67 +29,99 @@ const ItemAdd = ({
     }
 
     const propertyListRender = propertiesList.map(item => (
-        <option value={{valueProperty:item.propName, typeProperty: item.propType}} key={item.id} disabled={isExistsProperty(item.propName)} >{item.propName}</option>
+        <option value={item.propName} key={item.id} disabled={isExistsProperty(item.propName)}>{item.propName}</option>
     ))
 
     const propertyRender = Object.keys(properties).map((key, index) => (
-        <div style={{border: "1px solid red"}} key={key}>
-            <button
-                type="button"
-                className="btn-prop"
-                onClick={() => onDeleteProperty(key)}>-
-            </button>
-            <label>{`Свойство ${++index}`}
-                <select
-                    className="form-control"
-                    id={key}
-                    name="nameProperty"
-                    value={{valueProperty:properties[key]?.nameProperty, typeProperty: properties[key]?.typeProperty}}
-                    onChange={onChangeProperty}
-                    //defaultValue={propertiesListExt[0].propName}
-                >
-                    {propertyListRender}
-                </select>
-            </label>
+        <div
+            key={key}
+            className={"property-row"}>
+            <div className="property-row__column">
+                <button // удаление свойства
+                    type="button"
+                    className="btn-prop"
+                    onClick={() => onDeleteProperty(key)}
+                >-
+                </button>
+            </div>
 
-            <label>Значение
-                <input
-                    className="form-control"
-                    id={key}
-                    name="valueProperty"
-                    value={properties[key]?.valueProperty}
-                    onChange={onChangeProperty}
-                />
-            </label>
+            <div className="property-row__column property-row__column_width">
+                <label>
+                    {`Свойство ${++index}`}
+                    <select
+                        className="form-control"
+                        id={key}
+                        name="nameProperty"
+                        value={properties[key]?.nameProperty}
+                        onChange={onChangeProperty}
+                    >
+                        {propertyListRender}
+                    </select>
+                </label>
+            </div>
 
-            {properties[key]?.typeProperty === 'Dropdown'
-                ? <div>
-                    <button
-                        type="button"
-                        className="btn-prop"
-                    >+
-                    </button>
-                </div>
-                : null
-            }
+            <div className="property-row__column property-row__column_width">
+                <label>
+                    Значение
+                    {
+                        properties[key]?.typeProperty === 'Dropdown'
+                            ? <>
+                                {Object.keys(properties[key]?.valueDropDownProperty).map((valueKey, index, array) => (
+                                    <div
+                                        className="property-row"
+                                        key={valueKey}
+                                    >
+                                        <input
+                                            className="form-control property-row__column"
+                                            id={key}
+                                            name={valueKey}
+                                            value={properties[key]?.valueDropDownProperty[valueKey]}
+                                            onChange={onChangeProperty}
+                                        />
+                                        <div
+                                            className="property-row__column "
+                                            style={{visibility: `${index < (array.length - 1) ? 'hidden' : ''}`}}>
+                                            <button //удаление dropdown свойства
+                                                type="button"
+                                                className="btn-prop"
+                                                id={key}
+                                                value={properties[key]?.valueDropDownProperty[valueKey]}
+                                                onClick={() => deletePropertyDropdown(key, valueKey)}>-
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                                <button // кнопка добавления Dropdown свойства
+                                    type="button"
+                                    className="btn-prop"
+                                    key={key}
+                                    id={key}
+                                    onClick={() => addPropertyDropdown(key)}
+                                >+
+                                </button>
+                            </>
+                            : <div
+                                className="property-row"
+                                key={key}
+                            >
+                                <input
+                                    className="form-control property-row__column"
+                                    id={key}
+                                    name="valueProperty"
+                                    value={properties[key]?.valueProperty}
+                                    onChange={onChangeProperty}
+                                />
+                                <div className="btn-prop property-row__column" style={{visibility: "hidden"}}></div>
+                            </div>
+
+                    }
+                </label>
+            </div>
         </div>
     ))
     return (
         <form className="item-add" onSubmit={onSubmit}>
-            <div className="buttons">
-                <button
-                    className="btn btn-danger btn-sm"
-                    onClick={goBack}
-                    type={"button"}>
-                    Вернуться
-                </button>
-                <button
-                    className="buttons_save btn btn-success btn-sm"
-                    disabled={!name || !cost || !img}
-                >
-                    Сохранить
-                </button>
-            </div>
+            <ButtonsBackAndSave disabledButtonSave={!name || !cost || !img}/>
 
             <div className="main-property ">
                 <div className="main-property__caption">Добавление товара</div>
@@ -123,7 +157,6 @@ const ItemAdd = ({
                     {imgDirty && !img && <div style={{color: "red"}}>Укажите изображение товара</div>}
                     <div style={{position: "relative"}}>
                         <label
-                            //onClick={uploadImg}
                             className="form-control"
                             htmlFor="inputImg"
                             style={{textAlign: "right", height: "100%"}}
@@ -163,36 +196,24 @@ const ItemAdd = ({
             </div>
 
             <div className="second-property">
-                Добавление товару свойств
-                <button
-                    type="button"
-                    className="btn-prop"
-                    onClick={() => addProperty(notUsedProperty)}
-                    disabled={!notUsedProperty}
-                >+</button>
+                <div className={"property-row"}>
+                    <div className="property-row__column btn-prop" style={{visibility: "hidden"}}/>
+                    <div className="property-row__column property-row property-row__column_width"
+                         style={{justifyContent: "space-between"}}>
+                        <div style={{fontWeight: "bold"}}>Добавление товару свойств</div>
+                        <div>
+                            <button
+                                type="button"
+                                className="btn-prop"
+                                onClick={() => addProperty(notUsedProperty)}
+                                disabled={!notUsedProperty}
+                            >+
+                            </button>
+                        </div>
+                    </div>
+                    <div className="property-row__column property-row property-row__column_width"/>
+                </div>
                 {propertyRender}
-
-                {/*                <div style={{border: "1px solid red"}}>
-                    <button
-                        type="button"
-                        className="btn-prop"
-                    >-
-                    </button>
-
-                    <label>Свойство 1
-                        <select className="form-control">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                        </select>
-                    </label>
-
-                    <label>Значение
-                        <input className="form-control"/>
-                    </label>
-
-                </div>*/}
-
-
             </div>
 
         </form>

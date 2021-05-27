@@ -1,36 +1,24 @@
 .item-add {
-  .buttons {
+  .main-property {
     //border: 1px solid red;
-    text-align: right;
-    margin: 50px 0px;
-
-    button {
-      width: 150px;
-
-    }
-
-    &_save {
-      margin-left: 30px;
-    }
-  }
-
-  .main-property{
-    //border: 1px solid red;
-    input{
+    input {
       //width: 300px;
     }
-    textarea{
+
+    textarea {
       //width: 500px;
     }
+
     span {
       color: red;
     }
-    &__caption{
+
+    &__caption {
       //border: 1px solid red;
       font-weight: bold;
     }
 
-    &__item{
+    &__item {
       //border: 1px solid red;
       margin: 10px 0px;
     }
@@ -44,23 +32,57 @@
 
   }
 
-  .btn-prop{
+  .btn-prop {
     $size: 27px;
+    $color: blue;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     border-radius: 50%;
-    border:1px solid blue;
-    color:blue;
+    border: 1px solid $color;
+    color: $color;
     width: $size;
     height: $size;
-    text-align: center;
-    font-weight: bold;
+    //text-align: center;
+    font-weight: bolder;
+    font-size: 20px;
     background-color: white;
     cursor: pointer;
-    line-height: 0px;
-    padding: 0px;
-    margin: 0px;
-    //vertical-align: center;
+    //line-height: 0px;
+    margin-top: 5px;
+    //padding: 0px 0px;
   }
 
+  .property-row {
+    //border: 1px solid green;
+    display: flex;
+    margin: 0 -10px;
 
+    label {
+      width: 100%;
+    }
+
+    input {
+      margin-bottom: 8px;
+    }
+
+    &__column {
+      //border: 1px solid red;
+      margin: 0 10px;
+      //flex: 1 1 20px;
+
+      &_width{
+        flex: 0 1 450px
+      }
+
+      &_align-bottom{
+        //border: 1px solid red;
+        align-self: flex-end;
+      }
+
+    }
+  }
 }
 

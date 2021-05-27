@@ -1,3 +1,4 @@
+
 export const itemLoaded = (newItem) => {
     return {
         type: 'FETCH_ITEM_SUCCESS',
@@ -25,17 +26,11 @@ export const fetchItem = (id) => (storeService, dispatch) => {
         .catch((error) => dispatch(itemError(error)) )
 }
 
-// export const fetchItem = (id) => (storeService, dispatch) => {
-//     dispatch(itemRequested());
-//     storeService.getItem(id, (element) => {
-//         const itemsObj = element.val();
-//         dispatch(itemLoaded(itemsObj))
-//     });
-// }
-
 export const updateItem = (item, id) => (storeService, dispatch) => {
+    dispatch(itemRequested());
     storeService.putItem(item, id)
         .then((response) => {
-            dispatch(itemLoaded(response)
-            )})
+            dispatch(itemLoaded(response));
+        })
+
 }

@@ -3,10 +3,9 @@ import {compose} from "redux";
 
 import {withStoreService} from "../hoc";
 import ItemAdd from "./item-add";
-import {withRouter} from "react-router-dom";
-import ErrorIndicator from "../spinner/error-indicator";
+import ErrorIndicator from "../error-indicator";
 import Spinner from "../spinner";
-import {deleteProp, fetchProps} from "../../actions";
+import {clearMessage, fetchProps, setDisappearingMessage, setMessage} from "../../actions";
 import {connect} from "react-redux";
 
 class ItemAddContainer extends React.Component {
@@ -17,11 +16,12 @@ class ItemAddContainer extends React.Component {
             img: '',
             description: '',
             properties: {
-                // id:{
-                //     nameProperty:'',
-                //     valueProperty:'',
-                //     typeProperty:''
-                // }
+                /*                id: {
+                                    nameProperty: '',
+                                    valueProperty: '',
+                                    valueDropDownProperty: {},
+                                    typeProperty: '',
+                                }*/
             }
         },
         itemDirty: {
@@ -61,32 +61,40 @@ class ItemAddContainer extends React.Component {
             )
     }
 
+    componentWillUnmount() {
+        const {clearMessage} = this.props;
+        clearMessage();
+    }
+
     findNotUseProperty = () => {
         // находит первое не используемое свойство
 
         const {props: propertiesList = []} = this.props;
 
         if (!('properties' in this.state.item)) {
-            // return propertiesList[0].propName;
             return propertiesList[0];
         }
 
         const existsPropertyArr = Object.keys(this.state.item.properties).map(key => this.state.item.properties[key].nameProperty);
 
         for (let i = 0; i <= propertiesList.length - 1; i++) {
-            //const nameProperty = propertiesList[i].propName;
-            const property = propertiesList[i];
+            const nameProperty = propertiesList[i];
 
-            if (!existsPropertyArr.includes(/*nameProperty*/property.propName)) {
-                //return nameProperty;
-                return property;
+            if (!existsPropertyArr.includes(nameProperty.propName)) {
+                return nameProperty;
             }
 
         }
         return null;
     }
 
+    findPropertyByName = (nameProperty) => {
+        const {props: propertiesList = []} = this.props;
+        return propertiesList.find(prop => prop.propName === nameProperty)
+    }
+
     addProperty = (notUsedProperty) => {
+
         this.setState({
             ...this.state,
             itemDirty: {...this.state.itemDirty},
@@ -96,13 +104,38 @@ class ItemAddContainer extends React.Component {
                     ...this.state.item.properties,
                     [Date.now()]: {
                         nameProperty: notUsedProperty.propName,
-                        valueProperty: '',
-                        typeProperty: notUsedProperty.propType
+                        typeProperty: notUsedProperty.propType,
+                        valueProperty: notUsedProperty.propType !== 'Dropdown' ? '' : null,
+                        valueDropDownProperty: notUsedProperty.propType === 'Dropdown' ? {[Date.now()]: ''} : null
                     }
                 }
             },
         })
 
+    }
+
+    addPropertyDropdown = (id) => {
+        this.setState(state => {
+            return {
+                ...state,
+                itemDirty: {...this.state.itemDirty},
+                item: {
+                    ...state.item,
+                    properties: {
+                        ...state.item.properties,
+                        [id]: {
+                            ...state.item.properties[id],
+                            valueDropDownProperty: {
+                                ...state.item.properties[id].valueDropDownProperty,
+                                [Date.now()]: ''
+                            }
+
+                            //valueDropDownProperty: notUsedProperty.propType === 'Dropdown' ? {[Date.now()]: ''} : null
+                        }
+                    }
+                },
+            }
+        })
     }
 
     blurHandler = (e) => {
@@ -148,81 +181,114 @@ class ItemAddContainer extends React.Component {
         })
     }
 
-    // onChangeProperty = (e) => {
-    //     const {name, value, id} = e.target;
-    //
-    //     this.setState({
-    //         ...this.state,
-    //         itemDirty: {...this.state.itemDirty},
-    //         item: {
-    //             ...this.state.item,
-    //             properties: {
-    //                 ...this.state.item.properties,
-    //                 [id]: {
-    //                     ...this.state.item.properties[id],
-    //                     [name]: value
-    //                 }
-    //             }
-    //         }
-    //     })
-    //     console.log(this.state)
-    // }
-
     onChangeProperty = (e) => {
         const {name, value, id} = e.target;
 
-        let val;
-        if (typeof value === 'object') {
-            const {valueProperty, typeProperty} = value;
-            val = {[name]: valueProperty, typeProperty: typeProperty}
-        } else {
-            val = {[name]: value}
-        }
+        this.setState((state) => {
+            let newValue = null;
+            let newValueDropdown = null;
+            if (name === 'nameProperty' || name === 'valueProperty') {
+                newValue = {[name]: value};
+                if (name === 'nameProperty') {
+                    const typeProperty = this.findPropertyByName(value).propType
+                    newValue.typeProperty = typeProperty;
 
-        this.setState({
-            ...this.state,
-            itemDirty: {...this.state.itemDirty},
-            item: {
-                ...this.state.item,
-                properties: {
-                    ...this.state.item.properties,
-                    [id]: {
-                        ...this.state.item.properties[id], ...val
-                        // [name]: valueProperty,
-                        // typeProperty: typeProperty
+                    if (typeProperty === 'Dropdown') {
+                        delete state.item.properties[id].valueProperty
+                        state.item.properties[id].valueDropDownProperty = {[Date.now()]: ''};
+
+                    } else {
+                        delete state.item.properties[id].valueDropDownProperty;
+                        state.item.properties[id].valueProperty = '';
+                    }
+
+                }
+                if (name === 'valueProperty') {
+                    const typeProperty = state.item.properties[id]?.typeProperty;
+                    switch (typeProperty) {
+                        case 'Number': {
+                            const regexp = /^[0-9]+$/;
+                            if (!value.match(regexp) && value.length > 0) return;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                newValueDropdown = {[name]: value};
+            }
+
+            return {
+                ...state,
+                itemDirty: {...state.itemDirty},
+                item: {
+                    ...state.item,
+                    properties: {
+                        ...state.item.properties,
+                        [id]: {
+                            ...state.item.properties[id],
+                            ...newValue,
+                            valueDropDownProperty: {...state.item.properties[id]?.valueDropDownProperty, ...newValueDropdown}
+                            //[name]: value
+                        }
                     }
                 }
             }
         })
+        //console.log(this.state)
     }
 
     onDeleteProperty = (id) => {
-        console.log(`must be deleted ${id}`);
+        //console.log(`must be deleted ${id}`);
         this.setState((state) => {
             delete state.item.properties[id];
             return state;
         })
     }
 
+    deletePropertyDropdown = (idProperty, idPropertyDropdown) => {
+        this.setState((state) => {
+            delete state.item.properties[idProperty].valueDropDownProperty[idPropertyDropdown];
+            return state;
+        })
+
+    }
+
     onSubmit = (e) => {
         e.preventDefault();
         const {item, file, fileURL} = this.state;
 
-        const {id, storeService: {putItem, postItem}} = this.props;
+        const {id, storeService: {putItem, postItem}, setMessage, setDisappearingMessage} = this.props;
 
         this.setState({isLoading: true});
 
-        id
-            ? putItem(item, id, file, fileURL)
+        if (id) {
+            setMessage(`Обновление данных о товаре [${item.name}] ...`);
+            putItem(item, id, file, fileURL)
                 .then(resolve => {
                     this.setValueForItemInState(resolve);
-                    alert('Обновлено')
+                    //alert('Обновлено');
+                    setMessage(`Данные о товаре [${item.name}] обновлены!`, 'success');
+                    //setDisappearingMessage(`Данные о товаре [${item.name}] обновлены ...`);
+
                 })
-            : postItem(item, file)
+                .catch(error => {
+                    setMessage(`Что-то пошло не так! Не обновились данные о товаре [${item.name}]!`, 'danger');
+                    this.setState({error: error, isLoading: false})
+
+                })
+        } else {
+            postItem(item, file)
                 .then(resolve => {
                     this.setValueForItemInState(resolve);
-                    alert('Созданно')
+                    //alert('Созданно');
+                    setMessage(`Товар создан [${item.name}] ...`, 'success');
+                })
+                .catch(error => {
+                    setMessage(`Что-то пошло не так! Товар [${item.name}] не был создан!`, 'danger');
+                    this.setState({error: error, isLoading: false})
+
                 });
+        }
 
     };
 
@@ -242,16 +308,17 @@ class ItemAddContainer extends React.Component {
             addProperty,
             onChangeProperty,
             onDeleteProperty,
-            findNotUseProperty
+            findNotUseProperty,
+            addPropertyDropdown,
+            deletePropertyDropdown
         } = this;
-        const {goBack} = this.props.history;
+
         return (<ItemAdd
                 item={item}
                 itemDirty={itemDirty}
                 onChange={onChange}
                 onFileChange={onFileChange}
                 onSubmit={onSubmit}
-                goBack={goBack}
                 blurHandler={blurHandler}
                 addProperty={addProperty}
                 propertiesList={propertiesList}
@@ -259,6 +326,8 @@ class ItemAddContainer extends React.Component {
                 onChangeProperty={onChangeProperty}
                 onDeleteProperty={onDeleteProperty}
                 notUsedProperty={findNotUseProperty()}
+                addPropertyDropdown={addPropertyDropdown}
+                deletePropertyDropdown={deletePropertyDropdown}
             />
         )
     }
@@ -276,12 +345,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     const {storeService} = ownProps;
     return {
         fetchProps: fetchProps(storeService, dispatch),
-        deleteProp: (id) => deleteProp(id)(storeService, dispatch)
+        //deleteProp: (id) => deleteProp(id)(storeService, dispatch),
+        setMessage: (message, typeMessage) => dispatch(setMessage(message, typeMessage)),
+        setDisappearingMessage: (message, typeMessage) => setDisappearingMessage(message, typeMessage)(dispatch),
+        clearMessage: () => dispatch(clearMessage())
     }
 }
 
 export default compose(
     withStoreService(),
-    withRouter,
     connect(mapStateToProps, mapDispatchToProps),
 )(ItemAddContainer);

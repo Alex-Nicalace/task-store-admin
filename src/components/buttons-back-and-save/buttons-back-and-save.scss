@@ -1,0 +1,14 @@
+.buttons {
+  //border: 1px solid red;
+  text-align: right;
+  margin: 50px 0px;
+
+  button {
+    width: 150px;
+
+  }
+
+  &_save {
+    margin-left: 30px;
+  }
+}

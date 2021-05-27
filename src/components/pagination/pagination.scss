@@ -1,0 +1,33 @@
+@import "~bootstrap/scss/bootstrap";
+
+.my-pagination {
+  //border: 1px solid red;
+  &__pages {
+    //border: 1px solid red;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .currentPage {
+      font-weight: bold;
+    }
+
+    .page {
+      @extend .page-link;
+      text-align: center;
+      //flex: 0 0 45px;
+      cursor: pointer;
+      //border: 1px solid red;
+    }
+
+    .disable-btn {
+      color: gray;
+    }
+  }
+
+  &__info {
+    text-align: center;
+    color: gray;
+  }
+}

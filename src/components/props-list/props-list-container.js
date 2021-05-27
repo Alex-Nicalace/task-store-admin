@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import PropsList from "./props-list";
 import {deleteProp, fetchProps} from "../../actions";
 import {withStoreService} from "../hoc";
-import ErrorIndicator from "../spinner/error-indicator";
+import ErrorIndicator from "../error-indicator";
 import Spinner from "../spinner";
 
 

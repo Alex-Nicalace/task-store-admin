@@ -1,8 +1,21 @@
 import React from 'react';
 import './items-list.scss';
 import {NavLink} from "react-router-dom";
+import SearchPanel from "../search-panel";
+import Pagination from "../pagination";
 
-const ItemsList = (props) => {
+const ItemsList = ({
+                       items,
+                       itemDelete,
+                       setSortedFieldHandle,
+                       sorted,
+                       changeSearchHandle,
+                       pageCurrent,
+                       pagePortionSize,
+                       pageSize,
+                       countRow,
+                       setPageHandler
+                   }) => {
     // const items = [
     //     {
     //         name: 'CASHES VALLEY LANE',
@@ -21,8 +34,6 @@ const ItemsList = (props) => {
     //     },
     // ]
 
-    const { items, itemDelete } = props;
-
     const renderRows = items.map(item => {
         return (
             <tr key={item.id}>
@@ -35,20 +46,36 @@ const ItemsList = (props) => {
                     <NavLink to={`/item-edit/${item.id}`}>Ред.</NavLink>
                 </td>
                 <td>
-                    <span className="as-link" onClick={() => itemDelete(item.id)} >Удалить</span>
+                    <span className="as-link" onClick={() => itemDelete(item.id)}>Удалить</span>
                 </td>
             </tr>
         )
     })
 
+    const markSorted = (fName) => {
+        if (fName === sorted.sortedField)
+            return <i className={`fa fa-fw fa-sort${sorted.sortDesc ? '-desc' : '-asc'}`}> </i>
+    }
+
     return (
         <div className="item-list">
-            <table className="table table-hover">
-                <thead className=''>
+            <div className="search-panel">
+                <SearchPanel changeSearchHandle={changeSearchHandle}/>
+            </div>
+
+            <table className="table table-hover table-sortable">
+                <thead>
                 <tr>
-                    <th className="first-column">Перечень товаров</th>
-                    <th>Стоимость</th>
-                    <th>Дата изменения</th>
+                    <th onClick={() => setSortedFieldHandle('name', false)}
+                        className="first-column th-pointer">{markSorted('name')}Перечень товаров
+                    </th>
+                    <th className="th-pointer"
+                        onClick={() => setSortedFieldHandle('cost', true)}>{markSorted('cost')}Стоимость
+                    </th>
+                    <th className="th-pointer"
+                        onClick={() => setSortedFieldHandle('dateModify', true)}>{markSorted('dateModify')}Дата
+                        изменения
+                    </th>
                     <th>Управление</th>
                     <th></th>
                 </tr>
@@ -60,6 +87,9 @@ const ItemsList = (props) => {
                 }
                 </tbody>
             </table>
+
+            <Pagination countRow={countRow} currentPage={pageCurrent} onSetPage={setPageHandler}
+                        portionSize={pagePortionSize} sizePage={pageSize}/>
         </div>
     )
 }

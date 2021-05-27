@@ -3,12 +3,10 @@ import {compose} from "redux";
 import {connect} from "react-redux";
 
 import ItemCard from "./item-card";
-import {fetchItem} from "../../actions";
+import {clearMessage, fetchItem, setDisappearingMessage, setMessage} from "../../actions";
 import {withStoreService} from "../hoc";
-import ErrorIndicator from "../spinner/error-indicator";
+import ErrorIndicator from "../error-indicator";
 import Spinner from "../spinner";
-import {withRouter} from "react-router-dom";
-
 
 class ItemCardContainer extends React.Component {
 
@@ -17,13 +15,24 @@ class ItemCardContainer extends React.Component {
         fetchItem(id);
     }
 
+    componentWillUnmount() {
+        const { clearMessage } = this.props;
+        clearMessage();
+    }
+
+    buyItemHandler = () => {
+        const { item, setMessage } = this.props;
+        setMessage(`Ждите доставки - [${item.name}] ...`, 'success');
+
+    }
+
     render(){
         const { item, isLoading, error, history } = this.props;
 
         if (error) return <ErrorIndicator/>
 
         if (isLoading) return <Spinner/>
-        return <ItemCard item={item} goBack={history.goBack} />
+        return <ItemCard item={item} goBack={history.goBack} buyItemHandler={this.buyItemHandler} />
     }
 }
 
@@ -39,11 +48,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     const {storeService} = ownProps;
     return {
         fetchItem: (id) => fetchItem(id)(storeService, dispatch),
+        setMessage: (message, typeMessage) => dispatch(setMessage(message, typeMessage)),
+        setDisappearingMessage: (message, typeMessage) => setDisappearingMessage(message, typeMessage)(dispatch),
+        clearMessage: () => dispatch(clearMessage())
     }
 }
 
 export default compose(
     withStoreService(),
-    withRouter,
     connect(mapStateToProps, mapDispatchToProps),
 )(ItemCardContainer);

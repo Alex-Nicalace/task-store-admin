@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import 'firebase/auth'
 
 const firebaseConfig = {
     apiKey: "AIzaSyBT83V2O5qgXB4p5RRdO0jS1UlQzo8RWOQ",
@@ -18,11 +19,22 @@ export default class StoreServiceFirebase {
 
     firebaseApp = firebase.initializeApp(firebaseConfig);
 
+    auth = this.firebaseApp.auth();
+
     //base = Rebase.createClass(this.firebaseApp.database());
 
     base = this.firebaseApp.database();
 
     storage = this.firebaseApp.storage();
+
+    getUserInfo = () => {
+        return new Promise((resolve, reject) => {
+            this.firebaseApp.auth().onAuthStateChanged(user => {
+                resolve(user)
+            });
+
+        })
+    }
 
     createAccount = async (email, password) => {
         return await firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -32,10 +44,10 @@ export default class StoreServiceFirebase {
         return await firebase.auth().signInWithEmailAndPassword(email, password) //авторизация
     }
 
-    // getItems = (func) => {
-    //     this.base.ref('items')
-    //         .on('value', func)
-    // }
+    unSignAccount = async () => {
+        return await this.firebaseApp.auth().signOut()
+    }
+
     getItems = () => {
         return new Promise((resolve, reject) => {
             this.base.ref('items')
@@ -49,10 +61,6 @@ export default class StoreServiceFirebase {
         })
     }
 
-    // getItem = (id, func) => {
-    //     this.base.ref(`items/${id}`)
-    //         .on('value', func)
-    // }
     getItem = (id) => {
         return new Promise((resolve, reject) => {
             this.base.ref(`items/${id}`)
