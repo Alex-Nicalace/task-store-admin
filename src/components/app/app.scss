@@ -6,6 +6,16 @@
   cursor: pointer;
 }
 
+.warning-message {
+  color: red;
+  font-weight: normal;
+  font-size: small;
+}
+
+.warning-control {
+  border: 1px solid red;
+}
+
 //$custom-file-text: (
 //        en: "Browserthsrth",
 //        es: "Elegir",

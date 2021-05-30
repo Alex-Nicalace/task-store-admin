@@ -3,7 +3,7 @@ import {compose} from "redux";
 import {connect} from "react-redux";
 
 import PropsList from "./props-list";
-import {deleteProp, fetchProps} from "../../actions";
+import {clearMessage, deleteProp, fetchProps} from "../../actions";
 import {withStoreService} from "../hoc";
 import ErrorIndicator from "../error-indicator";
 import Spinner from "../spinner";
@@ -14,6 +14,11 @@ class PropsListContainer extends React.Component {
     componentDidMount() {
         const {fetchProps} = this.props
         fetchProps();
+    }
+
+    componentWillUnmount() {
+        const {clearMessage} = this.props;
+        clearMessage();
     }
 
     render() {
@@ -45,7 +50,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     const {storeService} = ownProps;
     return {
         fetchProps: fetchProps(storeService, dispatch),
-        deleteProp: (id) => deleteProp(id)(storeService, dispatch)
+        deleteProp: (id) => deleteProp(id)(storeService, dispatch),
+        clearMessage: () => dispatch(clearMessage())
     }
 }
 

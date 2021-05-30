@@ -1,5 +1,4 @@
 import React from "react";
-import {NavLink} from "react-router-dom";
 import './item-card.scss';
 
 const ItemCard = (
@@ -49,9 +48,10 @@ const ItemCard = (
             <div className="props">
                 <div className="props-row">
                     <div className="prop">
-                        <img width='300px'
-                             src={img}
-                             alt=""/>
+                        <img
+                            className="img-items"
+                            src={img}
+                        />
                     </div>
                     {renderProperties}
 

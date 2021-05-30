@@ -30,9 +30,10 @@ const Registration = ({
             <div className="registration__caption">Регистрация</div>
             <div className="registration__item">
                 <label className="registration__label">Имя
-                    {firstNameDirty && firstNameError && <div style={{color: "red"}}>{firstNameError}</div>}
+                    {firstNameDirty && firstNameError && <div className="warning-message">{firstNameError}</div>}
                     <input
                         className="form-control"
+                        style={firstNameDirty && firstNameError ? {border:"1px solid red"} : null}
                         placeholder="Введите своё имя"
                         name="firstName"
                         onBlur={blurHandler}
@@ -42,9 +43,10 @@ const Registration = ({
             </div>
             <div className="registration__item">
                 <label className="registration__label">Фамилия
-                    {lastNameDirty && lastNameError && <div style={{color: "red"}}>{lastNameError}</div>}
+                    {lastNameDirty && lastNameError && <div className="warning-message">{lastNameError}</div>}
                     <input
                         className="form-control"
+                        style={lastNameDirty && lastNameError ? {border:"1px solid red"} : null}
                         placeholder="Введите свою фамилию"
                         name="lastName"
                         onBlur={blurHandler}
@@ -54,9 +56,10 @@ const Registration = ({
             </div>
             <div className="registration__item">
                 <label className="registration__label">E-mail
-                    {emailDirty && emailError && <div style={{color: "red"}}>{emailError}</div>}
+                    {emailDirty && emailError && <div className="warning-message">{emailError}</div>}
                     <input
                         className="form-control"
+                        style={emailDirty && emailError ? {border:"1px solid red"} : null}
                         placeholder="Введите свой E-mail"
                         name="email"
                         onBlur={blurHandler}
@@ -67,9 +70,10 @@ const Registration = ({
             </div>
             <div className="registration__item">
                 <label className="registration__label">Пароль
-                    {passwordDirty && passwordError && <div style={{color: "red"}}>{passwordError}</div>}
+                    {passwordDirty && passwordError && <div className="warning-message">{passwordError}</div>}
                     <input
                         className="form-control"
+                        style={passwordDirty && passwordError ? {border:"1px solid red"} : null}
                         type="password"
                         placeholder="Введите пароль"
                         name="password"
@@ -80,9 +84,10 @@ const Registration = ({
             </div>
             <div className="registration__item">
                 <label className="registration__label">Повторите пароль
-                    {passwordCheckDirty && passwordCheckError && <div style={{color: "red"}}>{passwordCheckError}</div>}
+                    {passwordCheckDirty && passwordCheckError && <div className="warning-message">{passwordCheckError}</div>}
                     <input
                         className="form-control"
+                        style={passwordCheckDirty && passwordCheckError ? {border:"1px solid red"} : null}
                         type="password"
                         placeholder="Введите пароль"
                         name="passwordCheck"

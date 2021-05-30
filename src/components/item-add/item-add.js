@@ -128,9 +128,10 @@ const ItemAdd = ({
 
                 <div className="main-property__item">
                     <div>Название товара<span>*</span></div>
-                    {nameDirty && !name && <div style={{color: "red"}}>Укажите название товара</div>}
+                    {nameDirty && !name && <div className="warning-message">Укажите название товара</div>}
                     <input
                         className="form-control"
+                        style={nameDirty && !name ? {border:"1px solid red"} : null}
                         name='name'
                         placeholder="Mercedes S550 4matic"
                         value={name}
@@ -141,9 +142,10 @@ const ItemAdd = ({
 
                 <div className="main-property__item">
                     <div>Стоимость товара<span>*</span></div>
-                    {costDirty && !cost && <div style={{color: "red"}}>Укажите стоимость товара</div>}
+                    {costDirty && !cost && <div className="warning-message">Укажите стоимость товара</div>}
                     <input
                         className="form-control"
+                        style={costDirty && !cost ? {border:"1px solid red"} : null}
                         name='cost'
                         placeholder="113 000"
                         value={cost}
@@ -154,12 +156,13 @@ const ItemAdd = ({
 
                 <div className="main-property__item">
                     <div>Изображение<span>*</span></div>
-                    {imgDirty && !img && <div style={{color: "red"}}>Укажите изображение товара</div>}
+                    {imgDirty && !img && <div className="warning-message">Укажите изображение товара</div>}
                     <div style={{position: "relative"}}>
                         <label
                             className="form-control"
+                            //style={imgDirty && !img ? {border:"1px solid red"} : null}
                             htmlFor="inputImg"
-                            style={{textAlign: "right", height: "100%"}}
+                            style={{textAlign: "right", height: "100%", border: `${imgDirty && !img ? {border:"1px solid red"} : null}`}}
                         >
                             <div style={{display: "flex", justifyContent: "space-between"}}>
                                 <div style={{textAlign: "left"}}>{img}</div>

@@ -6,6 +6,7 @@ import ErrorIndicator from "../error-indicator";
 import Spinner from "../spinner";
 import {clearMessage, fetchProps, setDisappearingMessage, setMessage} from "../../actions";
 import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 
 class PropAddContainer extends React.Component {
     state = {
@@ -49,7 +50,7 @@ class PropAddContainer extends React.Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        const {props: {storeService, setMessage}, state: {property: prop}} = this;
+        const {props: {storeService, setDisappearingMessage, history}, state: {property: prop}} = this;
 
         if (!prop.propName || !prop.propType)
             return;
@@ -65,7 +66,10 @@ class PropAddContainer extends React.Component {
                     isLoading: false,
                     error: null
                 });
-                setMessage(`Cоздано свойство - [${resolve.propName}] ...`, 'success');
+                history.push('/items-or-props/props');
+                setDisappearingMessage(`Создано свойство - [${resolve.propName}] ...`, 'success');
+
+
             })
             .catch(error => {
                 this.setState({isLoading: false, error: error});
@@ -110,6 +114,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 export default compose(
+    withRouter,
     withStoreService(),
     connect(null, mapDispatchToProps),
 )(PropAddContainer);

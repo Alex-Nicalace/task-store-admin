@@ -31,9 +31,10 @@ const PropAdd = ({
 
                 <div className="property__item">
                     <div>Название свойства</div>
-                    {propNameDirty && !propName && <div style={{color: "red"}}>Укажите название свойства</div>}
+                    {propNameDirty && !propName && <div className="warning-message">Укажите название свойства</div>}
                     <input
                         className="form-control"
+                        style={propNameDirty && !propName ? {border:"1px solid red"} : null}
                         placeholder="Цвет авто"
                         name="propName"
                         value={propName}
@@ -43,7 +44,7 @@ const PropAdd = ({
 
                 <div className="main-property__item">
                     <div>Укажите тип свойства</div>
-                    {propTypeDirty && !propType && <div style={{color: "red"}}>Укажите тип свойства</div>}
+                    {propTypeDirty && !propType && <div className="warning-message">Укажите тип свойства</div>}
                     <div>
                         <label>
                             <input type="radio"

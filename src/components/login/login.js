@@ -17,9 +17,10 @@ const Login = (props) => {
 
             <div className="registration__item">
                 <label className="registration__label">E-mail
-                    {emailDirty && emailError && <div style={{color: "red"}}>{emailError}</div>}
+                    {emailDirty && emailError && <div className="warning-message">{emailError}</div>}
                     <input
-                        className="form-control"
+                        className={`form-control `}
+                        style={emailDirty && emailError ? {border:"1px solid red"} : null}
                         placeholder="Введите свой E-mail"
                         name="email"
                         value={email}
@@ -29,9 +30,10 @@ const Login = (props) => {
             </div>
             <div className="registration__item">
                 <label className="registration__label">Пароль
-                    {passwordDirty && passwordError && <div style={{color: "red"}}>{passwordError}</div>}
+                    {passwordDirty && passwordError && <div className="warning-message">{passwordError}</div>}
                     <input
                         className="form-control"
+                        style={passwordDirty && passwordError ? {border:"1px solid red"} : null}
                         type="password"
                         placeholder="Введите пароль"
                         name="password"
