@@ -48,11 +48,12 @@
     //text-align: center;
     font-weight: bolder;
     font-size: 20px;
-    background-color: white;
-    cursor: pointer;
-    //line-height: 0px;
-    margin-top: 5px;
-    //padding: 0px 0px;
+
+    span{
+      display: block;
+      text-align: center;
+      margin-bottom: 3px;
+    }
   }
 
   .property-row {

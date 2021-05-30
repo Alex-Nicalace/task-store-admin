@@ -72,7 +72,7 @@ const ItemCard = (
 
                     <div className="prop">
                         <div className="prop-title">Стоимость</div>
-                        <div className="prop-value">{cost}$</div>
+                        <div className="prop-value">{(+cost).toLocaleString()}$</div>
                     </div>
 
                 </div>

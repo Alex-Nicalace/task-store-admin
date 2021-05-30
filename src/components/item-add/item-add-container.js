@@ -164,11 +164,12 @@ class ItemAddContainer extends React.Component {
     }
 
     onChange = (event) => {
-        const {name, value} = event.target;
+        let  {name, value} = event.target;
         switch (name) {
             case 'cost': {
-                const regexp = /^[0-9]+$/;
-                if (!value.match(regexp) && value.length > 0) return;
+                //const regexp = /^[0-9]+$/;
+                //if (!value.match(regexp) && value.length > 0) return;
+                value = value.replace(/[^\d]/g, '');
                 break;
             }
         }

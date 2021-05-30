@@ -40,7 +40,7 @@ const ItemsList = ({
                 <td>
                     <NavLink to={`/item-card/${item.id}`}> {item.name} </NavLink>
                 </td>
-                <td>{item.cost}$</td>
+                <td>{`${(+item.cost).toLocaleString()} $`}</td>
                 <td>{new Date(item.dateModify).toLocaleString()}</td>
                 <td>
                     <NavLink to={`/item-edit/${item.id}`}>Ред.</NavLink>

@@ -41,7 +41,7 @@ const ItemAdd = ({
                     type="button"
                     className="btn-prop"
                     onClick={() => onDeleteProperty(key)}
-                >-
+                ><span>-</span>
                 </button>
             </div>
 
@@ -86,7 +86,8 @@ const ItemAdd = ({
                                                 className="btn-prop"
                                                 id={key}
                                                 value={properties[key]?.valueDropDownProperty[valueKey]}
-                                                onClick={() => deletePropertyDropdown(key, valueKey)}>-
+                                                onClick={() => deletePropertyDropdown(key, valueKey)}>
+                                                <span>-</span>
                                             </button>
                                         </div>
                                     </div>
@@ -97,7 +98,7 @@ const ItemAdd = ({
                                     key={key}
                                     id={key}
                                     onClick={() => addPropertyDropdown(key)}
-                                >+
+                                ><span>+</span>
                                 </button>
                             </>
                             : <div
@@ -148,7 +149,7 @@ const ItemAdd = ({
                         style={costDirty && !cost ? {border:"1px solid red"} : null}
                         name='cost'
                         placeholder="113 000"
-                        value={cost}
+                        value={(+cost).toLocaleString().toLocaleString()}
                         onChange={onChange}
                         onBlur={blurHandler}
                     />
@@ -210,7 +211,7 @@ const ItemAdd = ({
                                 className="btn-prop"
                                 onClick={() => addProperty(notUsedProperty)}
                                 disabled={!notUsedProperty}
-                            >+
+                            ><span>+</span>
                             </button>
                         </div>
                     </div>
